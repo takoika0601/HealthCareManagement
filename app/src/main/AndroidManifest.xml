@@ -37,6 +37,11 @@
             android:name=".training.TrainingActivity"
             android:label="@string/title_activity_training" >
         </activity>
+        <activity
+            android:name=".training.SettingViewActivity"
+            android:label="@string/title_activity_setting_view" >
+        </activity>
+        <activity android:name=".training.TrainingSetting"/>
     </application>
 
 </manifest>

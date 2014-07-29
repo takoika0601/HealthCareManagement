@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/o">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="設定"
+            android:textSize="50sp"
+            android:gravity="center"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/relativeLayout3"
+        android:layout_margin="10dp">
+
+        <Button
+            android:id="@+id/setting"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:text="個人設定"
+            android:textSize="60sp"
+            android:background="@android:color/white" />
+
+        <Button
+            android:id="@+id/counter"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_weight="1"
+            android:text="目標回数"
+            android:textSize="60sp"
+            android:background="@android:color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayout1"
+        android:layout_margin="10dp">
+
+        <Button
+            android:id="@+id/add"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:text="新しい運動の追加"
+            android:textSize="55sp"
+            android:background="@android:color/white" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -49,6 +49,7 @@ import jp.co.akiguchilab.healthcaremanagement.http.HttpExec;
 import jp.co.akiguchilab.healthcaremanagement.service.CountBinder;
 import jp.co.akiguchilab.healthcaremanagement.service.CountReceiver;
 import jp.co.akiguchilab.healthcaremanagement.service.CountService;
+import jp.co.akiguchilab.healthcaremanagement.training.TrainingActivity;
 import jp.co.akiguchilab.healthcaremanagement.util.ParseUserInfoFromJSON;
 
 public class MainActivity extends Activity implements View.OnClickListener {
@@ -385,11 +386,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 alertDialog.show();
 
                 break;
+            case R.id.imageButton1:
+                Intent intent = new Intent(this, TrainingActivity.class);
+                startActivity(intent);
+                break;
         }
 		/*
-		 * if(v == exasize){
-		 *
-		 * } if(v == weight){
+		 * if(v == weight){
 		 *
 		 * }
 		 */
