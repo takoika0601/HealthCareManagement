@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/kabe">
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageView2"
+        android:layout_alignLeft="@+id/imageView2"
+        android:layout_marginBottom="31dp"
+        android:text="歩"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="33sp"/>
+
+    <TextView
+        android:id="@+id/counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:text="0"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="50sp"/>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/goal"
+        android:layout_alignBottom="@+id/walkman"
+        android:layout_alignParentRight="true"/>
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
+        android:background="#00000000"
+        android:maxHeight="80dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/we"/>
+
+    <ImageView
+        android:id="@+id/walkman"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/imageButton"
+        android:layout_below="@+id/imageButton"
+        android:layout_marginTop="93dp"
+        android:contentDescription="歩行者画像"
+        android:src="@drawable/walkman"/>
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageButton1"
+        android:layout_centerHorizontal="true"
+        android:background="#00000000"
+        android:text="開始"/>
+
+    <ImageButton
+        android:id="@+id/imageButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button2"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/walkman"
+        android:adjustViewBounds="true"
+        android:background="#00000000"
+        android:maxWidth="75dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/danberu"/>
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="79dp"
+        android:background="#00000000"
+        android:text="終了\nメール送信"/>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageButton1"
+        android:layout_alignRight="@+id/imageButton1"
+        android:layout_below="@+id/imageButton1"
+        android:gravity="center"
+        android:text="補強運動"/>
+
+</RelativeLayout>

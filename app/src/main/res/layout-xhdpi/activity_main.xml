@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/kabe">
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/clover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:maxHeight="80dp"
+            android:maxWidth="50dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/clover"
+            android:background="#00000000"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"></LinearLayout>
+
+        <ImageButton
+            android:id="@+id/apple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:maxHeight="80dp"
+            android:maxWidth="50dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/apple"
+            android:background="#00000000"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayout1">
+
+        <TextView
+            android:id="@+id/counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="60sp"/>
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="歩"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="40sp"
+            android:layout_alignBottom="@+id/counter"
+            android:layout_toRightOf="@+id/counter"/>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/relativeLayout1">
+
+
+        <ImageView
+            android:id="@+id/walkman"
+            android:layout_width="54dp"
+            android:layout_height="108dp"
+            android:contentDescription="歩行者画像"
+            android:background="@drawable/walkman"/>
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="right|center_vertical"
+            android:adjustViewBounds="true"
+            android:background="@drawable/goal"/>
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@id/frameLayout">
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="#00000000"
+            android:text="開始"
+            android:textSize="25sp"/>
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="#00000000"
+            android:text="終了\nメール送信"
+            android:textSize="25sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/relativeLayout3"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="#00000000"
+            android:maxWidth="100dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/danberu"/>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="補強運動"
+            android:textSize="20sp"
+            android:layout_alignTop="@+id/textView3"
+            />
+
+        <ImageButton
+            android:id="@+id/aki"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="100dp"
+            android:minWidth="100dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/calendar"/>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="カレンダー"
+            android:textSize="20sp"
+            android:layout_below="@+id/aki"
+            android:layout_centerHorizontal="true"/>
+
+        <ImageButton
+            android:id="@+id/imageButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="@drawable/camera"
+            android:minWidth="100dp"
+            android:minHeight="100dp"
+            android:scaleType="fitCenter"
+            android:layout_alignParentRight="true"/>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:text="カメラ"
+            android:textSize="20sp"
+            android:layout_below="@+id/imageButton3"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <ImageButton
+            android:id="@+id/bard"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:adjustViewBounds="true"
+            android:maxHeight="1dp"
+            android:maxWidth="50dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/bard"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"></LinearLayout>
+
+        <ImageButton
+            android:id="@+id/dog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:maxHeight="80dp"
+            android:maxWidth="50dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/dog"
+            android:background="#00000000"/>
+
+    </LinearLayout>
+</RelativeLayout>
