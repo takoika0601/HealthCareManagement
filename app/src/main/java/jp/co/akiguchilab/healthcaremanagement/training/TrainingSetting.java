@@ -8,6 +8,7 @@ import android.view.Window;
 import android.widget.Button;
 
 import jp.co.akiguchilab.healthcaremanagement.R;
+import jp.co.akiguchilab.healthcaremanagement.geneticalgorithm.GA;
 
 public class TrainingSetting extends Activity implements View.OnClickListener{
 
@@ -39,6 +40,8 @@ public class TrainingSetting extends Activity implements View.OnClickListener{
                 intent.putExtra("counter", "回");
                 startActivity(intent);
             case R.id.add:
+                intent.setClass(this, GA.class);
+                startActivity(intent);
                 break;
         }
     }
