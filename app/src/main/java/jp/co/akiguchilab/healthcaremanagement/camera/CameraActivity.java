@@ -189,49 +189,6 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         return mediaFile;
     }
 
-    /*
-        private String getDirPath() {
-            String dirPath = "";
-            File photoDir = null;
-            File extStorageDir = Environment.getExternalStorageDirectory();
-            if (extStorageDir.canWrite()) {
-                photoDir = new File(extStorageDir.getPath() + "/" + getPackageName());
-            }
-            if (photoDir != null) {
-                if (!photoDir.exists()) {
-                    photoDir.mkdirs();
-                }
-                if (photoDir.canWrite()) {
-                    dirPath = photoDir.getPath();
-                }
-            }
-            return dirPath;
-        }
-
-        private Uri getPhotoUri() {
-            long currentTimeMillis = System.currentTimeMillis();
-            Date today = new Date(currentTimeMillis);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
-            String title = dateFormat.format(today);
-            String dirPath = getDirPath();
-            String fileName = title + ".jpg";
-            String path = dirPath + "/" + fileName;
-            File file = new File(path);
-
-            ContentValues values = new ContentValues();
-            values.put(Images.Media.TITLE, title);
-            values.put(Images.Media.DISPLAY_NAME, fileName);
-            values.put(Images.Media.MIME_TYPE, "image/jpeg");
-            values.put(Images.Media.DATA, path);
-            values.put(Images.Media.DATE_TAKEN, currentTimeMillis);
-            if (file.exists()) {
-                values.put(Images.Media.SIZE, file.length());
-            }
-            Uri uri = getContentResolver().insert(Images.Media.EXTERNAL_CONTENT_URI, values);
-            //Uri uri = Uri.fromFile(file);
-            return uri;
-        }
-    */
     @Override
     protected void onResume() {
         super.onResume();
