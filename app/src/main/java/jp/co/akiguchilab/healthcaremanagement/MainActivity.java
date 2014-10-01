@@ -45,6 +45,7 @@ import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
+import jp.co.akiguchilab.healthcaremanagement.camera.CameraActivity;
 import jp.co.akiguchilab.healthcaremanagement.http.HttpExec;
 import jp.co.akiguchilab.healthcaremanagement.service.CountBinder;
 import jp.co.akiguchilab.healthcaremanagement.service.CountReceiver;
@@ -194,13 +195,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Button start = (Button) findViewById(R.id.button1);
         Button stop = (Button) findViewById(R.id.button2);
         ImageButton exasize = (ImageButton) findViewById(R.id.imageButton1);
-        //   ImageButton weight = (ImageButton) findViewById(R.id.imageButton2);
+        ImageButton calendar = (ImageButton) findViewById(R.id.main_calendar);
+        ImageButton camera = (ImageButton) findViewById(R.id.main_camera);
         ImageView walkman = (ImageView) findViewById(R.id.walkman);
 
         start.setOnClickListener(this);
         stop.setOnClickListener(this);
         exasize.setOnClickListener(this);
-        //    weight.setOnClickListener(this);
+        calendar.setOnClickListener(this);
+        camera.setOnClickListener(this);
 
         context = this;
         whoami = new Whoami();
@@ -341,6 +344,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId()) {
             case R.id.button1:
                 // 歩行検出サービス開始
@@ -387,15 +391,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
                 break;
             case R.id.imageButton1:
-                Intent intent = new Intent(this, TrainingActivity.class);
+                intent = new Intent(this, TrainingActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.main_calendar:
+                //TODO
+                break;
+            case R.id.main_camera:
+                intent = new Intent(this, CameraActivity.class);
                 startActivity(intent);
                 break;
         }
-		/*
-		 * if(v == weight){
-		 *
-		 * }
-		 */
     }
 
     private void startAuth() {
