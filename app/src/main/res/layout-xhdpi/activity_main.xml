@@ -145,7 +145,7 @@
             />
 
         <ImageButton
-            android:id="@+id/aki"
+            android:id="@+id/main_calendar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="100dp"
@@ -162,11 +162,11 @@
             android:gravity="center"
             android:text="カレンダー"
             android:textSize="20sp"
-            android:layout_below="@+id/aki"
+            android:layout_below="@id/main_calendar"
             android:layout_centerHorizontal="true"/>
 
         <ImageButton
-            android:id="@+id/imageButton3"
+            android:id="@+id/main_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
@@ -183,7 +183,7 @@
             android:layout_marginRight="20dp"
             android:text="カメラ"
             android:textSize="20sp"
-            android:layout_below="@+id/imageButton3"
+            android:layout_below="@id/main_camera"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
 
