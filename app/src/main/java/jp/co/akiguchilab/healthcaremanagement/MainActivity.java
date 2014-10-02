@@ -225,7 +225,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void run() {
                         if (success) {
-                            if (text.equals("") == false) {
+                            if (!text.equals("")) {
                                 if (mrJSON.Get(text)) {
                                     Editor editor = thisPref.edit();
                                     editor.putString("JSON", text);
@@ -569,9 +569,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		 */
         inService = isServiceActive(thisService);
 
-        if (inService == false) {
+        if (!inService) {
             startAuth();
-        } else if (isAuth == false) {
+        } else if (!isAuth) {
             boolean v = thisPref.getBoolean("useVib", true);
             boolean c = thisPref.getBoolean("useCamera", true);
 
