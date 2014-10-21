@@ -32,7 +32,7 @@ public class CameraActivity extends Activity implements View.OnClickListener {
 
     private Uri mImageUri;
     private SharedPreferences sharedPreferences;
-    private ImageView imageView;
+    private static ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
