@@ -45,6 +45,7 @@ import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
+import jp.co.akiguchilab.healthcaremanagement.calendar.CalendarActivity;
 import jp.co.akiguchilab.healthcaremanagement.camera.CameraActivity;
 import jp.co.akiguchilab.healthcaremanagement.http.HttpExec;
 import jp.co.akiguchilab.healthcaremanagement.service.CountBinder;
@@ -395,7 +396,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.main_calendar:
-                //TODO
+                intent = new Intent(this, CalendarActivity.class);
+                startActivity(intent);
                 break;
             case R.id.main_camera:
                 intent = new Intent(this, CameraActivity.class);

@@ -2,10 +2,12 @@
 <resources>
 
     <string name="app_name">健康管理</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
     <string name="title_activity_training">TrainingActivity</string>
     <string name="title_activity_setting_view">SettingViewActivity</string>
     <string name="title_activity_camera">CameraActivity</string>
-
+    <string name="title_activity_calendar">CalendarActivity</string>
+    
+    <string name="format_month_year">yyyy年MM月</string>
 </resources>
