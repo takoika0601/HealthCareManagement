@@ -24,7 +24,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -100,11 +99,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
 
         public String infoString() {
-            String[] info = new String[] {
+            String[] info = new String[]{
                     String.format("number:name = %s:%s", this.number, this.name),
                     String.format("start at %s", DateFormat.format("yyyy-MM-dd(E) kk:mm:ss", this.authAt).toString()),
-                    String.format("collection time range %02d:00 - %02d:00",this.pHour,this.pHour+this.pLong),
-                    String.format("use Vibrator on update = %s",this.useVib),
+                    String.format("collection time range %02d:00 - %02d:00", this.pHour, this.pHour + this.pLong),
+                    String.format("use Vibrator on update = %s", this.useVib),
             };
             return StringUtils.join(info, "\n");
         }
@@ -193,15 +192,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         setContentView(R.layout.activity_main);
 
-        Button start = (Button) findViewById(R.id.button1);
-        Button stop = (Button) findViewById(R.id.button2);
         ImageButton exasize = (ImageButton) findViewById(R.id.imageButton1);
         ImageButton calendar = (ImageButton) findViewById(R.id.main_calendar);
         ImageButton camera = (ImageButton) findViewById(R.id.main_camera);
         ImageView walkman = (ImageView) findViewById(R.id.walkman);
 
-        start.setOnClickListener(this);
-        stop.setOnClickListener(this);
         exasize.setOnClickListener(this);
         calendar.setOnClickListener(this);
         camera.setOnClickListener(this);
@@ -214,8 +209,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         isAuth = false;
 
         // 初期状態におけるボタンの表示状態の設定
-        start.setVisibility(View.VISIBLE);
-        stop.setVisibility(View.INVISIBLE);
         //    weight.setVisibility(View.INVISIBLE);
 
         atAfterAuth = new HttpExec.callBack() {
@@ -239,7 +232,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                                             mrJSON.number, mrJSON.pHour, mrJSON.pLong, v, new Date(), c);
                                     isAuth = true;
                                     /*
-									 * Intent start = new Intent();
+                                     * Intent start = new Intent();
 									 * start.setClass(getApplicationContext(),
 									 * thisService); start.putExtra("whoami",
 									 * whoami.id); // notice!
@@ -249,8 +242,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 									 * whoami.pLong); start.putExtra("vibrator",
 									 * whoami.useVib);
 									 */
-                                    findViewById(R.id.button1).setVisibility(View.INVISIBLE);
-                                    findViewById(R.id.button2).setVisibility(View.VISIBLE);
 
                                     if (inService == false) {
                                         serviceController(true);
@@ -290,7 +281,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             if (directory.exists()) {
                 if (directory.canWrite()) {
                     //書き込める場合、フォルダを作成
-                    File file = new File(directory.getAbsolutePath() + getString(R.string.app_name));
+                    File file = new File(directory.getAbsolutePath() + "/" + getString(R.string.app_name));
                     file.mkdir();
                 }
             }
@@ -347,50 +338,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
-            case R.id.button1:
-                // 歩行検出サービス開始
-                serviceController(true);
-
-                findViewById(R.id.button1).setVisibility(View.INVISIBLE);
-                findViewById(R.id.button2).setVisibility(View.VISIBLE);
-
-                break;
-
-            case R.id.button2:
-                // ダイアログを生成
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-                // 内容の設定
-                alertDialog.setMessage("今日の運動を終了して、これまでのデータを先生に送りますか？");
-                // ボタンの設定(ok)
-                alertDialog.setPositiveButton("はい",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // ボタンを押した時の処理
-                                serviceController(false);
-
-                                findViewById(R.id.button1).setVisibility(
-                                        View.VISIBLE);
-                                findViewById(R.id.button2).setVisibility(
-                                        View.INVISIBLE);
-
-                                // メール送信
-                            }
-                        }
-                );
-                // ボタンの設定(no)
-                alertDialog.setNeutralButton("いいえ",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // ボタンを押した時の処理
-                                // 画面継続
-                            }
-                        }
-                );
-                // ダイアログの作成と描画
-                alertDialog.create();
-                alertDialog.show();
-
-                break;
             case R.id.imageButton1:
                 intent = new Intent(this, TrainingActivity.class);
                 startActivity(intent);
@@ -508,11 +455,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
-/*    private void playFromSoundPool() {
-        // 音声データを再生する
-        mSoundPool.play(mSoundId, 1.0F, 1.0F, 0, 0, 1.0F);
-    }
-*/
+    /*    private void playFromSoundPool() {
+            // 音声データを再生する
+            mSoundPool.play(mSoundId, 1.0F, 1.0F, 0, 0, 1.0F);
+        }
+    */
     // 非同期の画面更新クラス
     class ViewRefresh extends Thread {
         Handler handler = new Handler();
