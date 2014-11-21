@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import jp.co.akiguchilab.healthcaremanagement.R;
 
-public class CalendarActivity extends Activity{
+public class CalendarActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,7 +15,7 @@ public class CalendarActivity extends Activity{
         setContentView(R.layout.activity_calendar);
 
         CalendarView calendarView = (CalendarView) findViewById(R.id.Calendar);
-        calendarView.set(2014, 10-1);
+        calendarView.set(2014, 10 - 1);
     }
 
 

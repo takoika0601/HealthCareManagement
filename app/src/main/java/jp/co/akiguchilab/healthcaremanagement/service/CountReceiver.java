@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-public class CountReceiver extends BroadcastReceiver{
+public class CountReceiver extends BroadcastReceiver {
     private static final String TAG = CountReceiver.class.getSimpleName();
 
     public CountReceiver() {
@@ -17,7 +17,7 @@ public class CountReceiver extends BroadcastReceiver{
         String action = intent.getAction();
 
 		/*
-		//電源オン時に呼び出される
+        //電源オン時に呼び出される
 		if(action.equals(Intent.ACTION_BOOT_COMPLETED)){
 			context = context.getApplicationContext();
 			Intent service = new Intent(context, CountService.class);

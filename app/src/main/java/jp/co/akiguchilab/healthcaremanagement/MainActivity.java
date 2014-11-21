@@ -20,7 +20,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
-import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -59,6 +60,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
     boolean isAuth = false;
 
     private final int MP = ViewGroup.LayoutParams.MATCH_PARENT;
+
+    private static final int MENU_A = 0;
+    private static final int MENU_B = 1;
 
     class Whoami {
         int id;
@@ -146,18 +150,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         return retValue;
     }
 
-    // SE再生用
-    private SoundPool mSoundPool;
-    private int mSoundId;
-
-    // 画面更新
-    ViewRefresh thread;
-
-    private CountService countService;
-    private final CountReceiver receiver = new CountReceiver();
-    private HttpExec httpExec = null;
-    private HttpExec.callBack atAfterAuth = null;
-
     private ServiceConnection serviceConnection = new ServiceConnection() {
         // サービスが接続されたときに呼び出される
         @Override
@@ -172,6 +164,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
             countService = null;
         }
     };
+
+    // SE再生用
+    private SoundPool mSoundPool;
+    private int mSoundId;
+
+    // 画面更新
+    ViewRefresh thread;
+
+    private CountService countService;
+    private final CountReceiver receiver = new CountReceiver();
+    private HttpExec httpExec = null;
+    private HttpExec.callBack atAfterAuth = null;
 
     // SDカードの有無判定
     String status = Environment.getExternalStorageState();
@@ -192,7 +196,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         setContentView(R.layout.activity_main);
 
-        ImageButton exasize = (ImageButton) findViewById(R.id.imageButton1);
+        ImageButton exasize = (ImageButton) findViewById(R.id.main_danberu);
         ImageButton calendar = (ImageButton) findViewById(R.id.main_calendar);
         ImageButton camera = (ImageButton) findViewById(R.id.main_camera);
         ImageView walkman = (ImageView) findViewById(R.id.walkman);
@@ -338,7 +342,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
-            case R.id.imageButton1:
+            case R.id.main_danberu:
                 intent = new Intent(this, TrainingActivity.class);
                 startActivity(intent);
                 break;
@@ -356,8 +360,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void startAuth() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        String defaultA = thisPref.getString("account", "");
-        String defaultP = thisPref.getString("password", "");
+        String defaultA = thisPref.getString("account", "i09324");
+        String defaultP = thisPref.getString("password", "i09324");
 
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
@@ -429,29 +433,30 @@ public class MainActivity extends Activity implements View.OnClickListener {
         mode.setClass(this, CountService.class);
 
         if (start) {
+            mode.putExtra("whoami", whoami.id);
+            mode.putExtra("sInterval", 5);
+            mode.putExtra("phour", whoami.pHour);
+            mode.putExtra("plong", whoami.pLong);
+            mode.putExtra("vibrator", whoami.useVib);
+
             startService(mode);
             inService = true;
+
+            Intent intent = new Intent(this, CountService.class);
 
             IntentFilter intentfilter = new IntentFilter(CountService.ACTION);
             registerReceiver(receiver, intentfilter);
 
-            // サービスをバインド
-            bindService(mode, serviceConnection, Context.BIND_AUTO_CREATE);
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-            // スレッドを作成、スタート
             thread = new ViewRefresh();
             thread.start();
-
         } else {
             stopService(mode);
             inService = false;
 
-            // スレッド終了
-            thread.close();
-            // サービスのアンバインド
             unbindService(serviceConnection);
-            // 登録解除
-            unregisterReceiver(receiver);
+            thread.close();
         }
     }
 
@@ -499,20 +504,104 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    // Backボタンの挙動制御
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode != KeyEvent.KEYCODE_BACK) {
-            // Backボタン押下時のActivity終了を禁止する
-            return super.onKeyDown(keyCode, event);
-        } else {
-            return false;
+//    // Backボタンの挙動制御
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode != KeyEvent.KEYCODE_BACK) {
+//            // Backボタン押下時のActivity終了を禁止する
+//            return super.onKeyDown(keyCode, event);
+//        } else {
+//            return false;
+//        }
+//    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, MENU_A, 0, "歩数計の開始/停止").setIcon(android.R.drawable.ic_menu_preferences);
+        menu.add(0, MENU_B, 0, "設定").setIcon(android.R.drawable.ic_menu_preferences);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        switch (id) {
+            case MENU_A:
+                if (!inService) {
+                    if (!isAuth) {
+                        startAuth();
+                    } else {
+                        serviceController(true);
+                    }
+                } else {
+
+                    builder.setTitle("歩数計を停止してもよろしいですか？");
+                    builder.setPositiveButton("はい", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            serviceController(false);
+                            isAuth = false;
+                        }
+                    });
+
+                    builder.setNegativeButton("いいえ", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int which) {
+
+                        }
+                    });
+
+                    builder.create().show();
+                }
+                break;
+            case MENU_B:
+                if (isAuth) {
+                    final String[] chkItenms = {"バイブレーターを使用する", "カメラを使用する"};
+                    final boolean[] chkSts = {whoami.useVib, whoami.useCamera};
+
+                    builder.setTitle("サービスの設定");
+                    builder.setMultiChoiceItems(chkItenms, chkSts, new DialogInterface.OnMultiChoiceClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which, boolean flag) {
+                            switch (which) {
+                                case 0:
+                                    whoami.useVib = flag;
+                                    break;
+                                case 1:
+                                    whoami.useCamera = flag;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    });
+                    builder.setPositiveButton("はい", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Editor editor = thisPref.edit();
+                            editor.putBoolean("useVib", whoami.useVib);
+                            editor.putBoolean("useCamera", whoami.useCamera);
+                            editor.commit();
+                            serviceController(false);
+                            serviceController(true);
+                        }
+                    });
+                    builder.create().show();
+                }
+                break;
+            default:
+                break;
         }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-		/*
+        /*
 		 * //音声データを読み込み mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC,
 		 * 0); mSoundId = mSoundPool.load(getApplicationContext(), R.raw.a, 0);
 		 */
@@ -530,19 +619,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
             isAuth = true;
         }
 
-        Intent intent = new Intent(this, CountService.class);
-        //startService(intent);
+        if (inService) {
+            Intent intent = new Intent(this, CountService.class);
 
-        IntentFilter intentfilter = new IntentFilter(CountService.ACTION);
-        registerReceiver(receiver, intentfilter);
+            IntentFilter intentfilter = new IntentFilter(CountService.ACTION);
+            registerReceiver(receiver, intentfilter);
 
-        // サービスをバインド
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-        // スレッドを作成、スタート
-        thread = new ViewRefresh();
-        thread.start();
-
+            thread = new ViewRefresh();
+            thread.start();
+        }
     }
 
     @Override
@@ -551,6 +638,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		/*
 		 * //音声データをリリースする mSoundPool.release();
 		 */
+        try {
+            thread.close();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -561,6 +653,5 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		/*
 		 * mSoundPool.release();
 		 */
-
     }
 }

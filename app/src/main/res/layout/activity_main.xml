@@ -15,11 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:adjustViewBounds="true"
             android:background="#00000000"
-            android:maxHeight="80dp"
-            android:maxWidth="50dp"
-            android:scaleType="fitCenter"
             android:src="@drawable/clover"/>
 
         <ImageButton
@@ -27,11 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:adjustViewBounds="true"
             android:background="#00000000"
-            android:maxHeight="80dp"
-            android:maxWidth="50dp"
-            android:scaleType="fitCenter"
             android:src="@drawable/apple"/>
 
         <ImageButton
@@ -40,11 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:adjustViewBounds="true"
             android:background="#00000000"
-            android:maxHeight="80dp"
-            android:maxWidth="50dp"
-            android:scaleType="fitCenter"
             android:src="@drawable/dog"/>
 
         <ImageButton
@@ -53,9 +41,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignRight="@+id/clover"
-            android:layout_alignTop="@id/dog"
-            android:scaleType="centerCrop"
             android:background="#00ffffff"
             android:src="@drawable/bard"/>
     </RelativeLayout>
@@ -71,13 +56,12 @@
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
         android:layout_above="@+id/centerInParentLayout">
 
         <ImageView
             android:id="@+id/walkman"
-            android:layout_width="40dp"
-            android:layout_height="100dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/walkman"
             android:contentDescription="歩行者画像"/>
 
@@ -121,38 +105,15 @@
         android:id="@+id/menuLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:layout_below="@id/frameLayout">
-
-        <ImageButton
-            android:id="@+id/imageButton1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:background="#00000000"
-            android:maxWidth="100dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/danberu"/>
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/textView3"
-            android:layout_marginLeft="10dp"
-            android:text="補強運動"
-            android:textSize="20sp"/>
+        android:layout_below="@id/frameLayout"
+        android:layout_marginTop="50dp">
 
         <ImageButton
             android:id="@+id/main_calendar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:adjustViewBounds="true"
-            android:background="@drawable/calendar"
-            android:minHeight="100dp"
-            android:minWidth="100dp"
-            android:scaleType="fitCenter"/>
+            android:background="@drawable/calendar"/>
 
         <TextView
             android:id="@+id/textView3"
@@ -165,23 +126,41 @@
             android:textSize="20sp"/>
 
         <ImageButton
+            android:id="@+id/main_danberu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:layout_toLeftOf="@id/main_calendar"
+            android:background="@drawable/danberu"/>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/main_danberu"
+            android:layout_alignRight="@id/main_danberu"
+            android:layout_below="@+id/main_danberu"
+            android:gravity="center"
+            android:text="補強運動"
+            android:textSize="20sp"/>
+
+        <ImageButton
             android:id="@+id/main_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:adjustViewBounds="true"
-            android:background="@drawable/camera"
-            android:minHeight="100dp"
-            android:minWidth="100dp"
-            android:scaleType="fitCenter"/>
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="40dp"
+            android:layout_toRightOf="@+id/main_calendar"
+            android:background="@drawable/camera"/>
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/textView2"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
+            android:layout_alignLeft="@+id/main_camera"
+            android:layout_alignRight="@+id/main_camera"
+            android:layout_below="@+id/main_camera"
+            android:gravity="center"
             android:text="カメラ"
             android:textSize="20sp"/>
     </RelativeLayout>

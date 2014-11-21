@@ -62,7 +62,7 @@ public class CalendarView extends LinearLayout {
      * コンストラクタ
      *
      * @param context context
-     * @param attrs attributeset
+     * @param attrs   attributeset
      */
     @SuppressLint("SimpleDateFormat")
     public CalendarView(Context context, AttributeSet attrs) {
@@ -102,9 +102,9 @@ public class CalendarView extends LinearLayout {
             mTitleView = new TextView(context, attrs);
             mTitleView.setGravity(Gravity.CENTER_HORIZONTAL); // 中央に表示
             mTitleView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT, 80));
-            mTitleView.setTextSize((int)(scaleDensity * 14));
+            mTitleView.setTextSize((int) (scaleDensity * 14));
             mTitleView.setTypeface(null, Typeface.BOLD); // 太字
-            mTitleView.setPadding(0, 0, 0, (int)(scaleDensity * 16));
+            mTitleView.setPadding(0, 0, 0, (int) (scaleDensity * 16));
 
             navBar.addView(mTitleView);
 
@@ -142,7 +142,7 @@ public class CalendarView extends LinearLayout {
         for (int i = 0; i < WEEKDAYS; i++) {
             TextView textView = new TextView(context);
             textView.setGravity(Gravity.CENTER); // 中央に表示
-            textView.setPadding(0, 0, (int)(scaleDensity * 4), 0);
+            textView.setPadding(0, 0, (int) (scaleDensity * 4), 0);
 
             LinearLayout.LayoutParams llp =
                     new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT);
@@ -174,9 +174,9 @@ public class CalendarView extends LinearLayout {
             for (int j = 0; j < WEEKDAYS; j++) {
                 TextView dayView = new TextView(context);
                 dayView.setGravity(Gravity.CENTER);
-                dayView.setPadding(0, (int)(scaleDensity * 4), (int)(scaleDensity * 4), 0);
+                dayView.setPadding(0, (int) (scaleDensity * 4), (int) (scaleDensity * 4), 0);
                 LinearLayout.LayoutParams llp =
-                        new LinearLayout.LayoutParams(0, (int)(scaleDensity * 48));
+                        new LinearLayout.LayoutParams(0, (int) (scaleDensity * 48));
                 llp.weight = 1;
                 weekLine.addView(dayView, llp);
             }
@@ -189,7 +189,7 @@ public class CalendarView extends LinearLayout {
     /**
      * 年と月を指定して、カレンダーの表示を初期化する
      *
-     * @param year 年の指定
+     * @param year  年の指定
      * @param month 月の指定
      */
     public void set(int year, int month) {
@@ -203,7 +203,7 @@ public class CalendarView extends LinearLayout {
     /**
      * 指定した年月日をタイトルに設定する
      *
-     * @param year 年の指定
+     * @param year  年の指定
      * @param month 月の指定
      */
     @SuppressLint("SimpleDateFormat")
@@ -234,7 +234,7 @@ public class CalendarView extends LinearLayout {
     /**
      * 日付を設定していくメソッド
      *
-     * @param year 年の指定
+     * @param year  年の指定
      * @param month 月の指定
      */
     private void setDays(int year, int month) {
@@ -245,9 +245,9 @@ public class CalendarView extends LinearLayout {
         int dayCounter = 1;
 
         Calendar todayCalendar = Calendar.getInstance();
-        int todayYear  = todayCalendar.get(Calendar.YEAR);
+        int todayYear = todayCalendar.get(Calendar.YEAR);
         int todayMonth = todayCalendar.get(Calendar.MONTH);
-        int todayDay   = todayCalendar.get(Calendar.DAY_OF_MONTH);
+        int todayDay = todayCalendar.get(Calendar.DAY_OF_MONTH);
 
         for (int i = 0; i < MAX_WEEK; i++) {
             LinearLayout weekLayout = mWeeks.get(i);
@@ -271,9 +271,9 @@ public class CalendarView extends LinearLayout {
                 // 日付を設定
                 dayView.setText(String.valueOf(dayCounter));
 
-                boolean isToday = todayYear  == year  &&
+                boolean isToday = todayYear == year &&
                         todayMonth == month &&
-                        todayDay   == dayCounter;
+                        todayDay == dayCounter;
 
                 if (isToday) {
                     dayView.setTextColor(TODAY_COLOR); // 赤文字

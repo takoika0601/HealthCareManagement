@@ -1,4 +1,4 @@
-package jp.co.akiguchilab.healthcaremanagement;
+package jp.co.akiguchilab.healthcaremanagement.service;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -11,8 +11,8 @@ import java.util.List;
 public class CountMaster implements SensorEventListener {
     private static final String TAG = CountMaster.class.getSimpleName();
 
-    private SensorManager sensorManager;
-    DatabaseHelper databasehelper;
+    SensorManager sensorManager;
+    //DatabaseHelper databaseHelper;
 
     //前回の値を保存
     private float oldX = 0f;
@@ -58,6 +58,17 @@ public class CountMaster implements SensorEventListener {
     //加速度の方向が転換した回数
     int vectorchangecount = 0;
 
+    public CountMaster(SensorManager sensorManager/*, DatabaseHelper databaseHelper*/) {
+        //this.databaseHelper = databaseHelper;
+        //this.counter = databaseHelper.selectCount();
+
+        List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
+        if (sensors.size() > 0) {
+            Sensor s = sensors.get(0);
+            sensorManager.registerListener(this, s, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
+
     public float getX() {
         return X;
     }
@@ -76,18 +87,6 @@ public class CountMaster implements SensorEventListener {
 
     public long getCounter() {
         return counter;
-    }
-
-    public CountMaster(SensorManager sensorManager, DatabaseHelper databasehelper) {
-        this.databasehelper = databasehelper;
-        long counter = databasehelper.selectCount();
-        this.counter = counter;
-
-        List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
-        if (sensors.size() > 0) {
-            Sensor s = sensors.get(0);
-            sensorManager.registerListener(this, s, SensorManager.SENSOR_DELAY_NORMAL);
-        }
     }
 
     public void stopSensor() {
@@ -128,7 +127,7 @@ public class CountMaster implements SensorEventListener {
                 counter++;
                 counted = true;
                 vectorchangecount = 0;
-                databasehelper.updateCount(counter);
+                //databaseHelper.updateCount(counter);
             }
 
             //前回の加速度の向きを保存する
@@ -149,7 +148,6 @@ public class CountMaster implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // TODO 自動生成されたメソッド・スタブ
-
     }
+
 }

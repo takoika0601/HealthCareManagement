@@ -10,7 +10,7 @@ import android.widget.Button;
 import jp.co.akiguchilab.healthcaremanagement.R;
 import jp.co.akiguchilab.healthcaremanagement.geneticalgorithm.GA;
 
-public class TrainingSetting extends Activity implements View.OnClickListener{
+public class TrainingSetting extends Activity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

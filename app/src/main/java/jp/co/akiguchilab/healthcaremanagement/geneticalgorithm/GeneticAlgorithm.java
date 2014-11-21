@@ -657,7 +657,7 @@ public class GeneticAlgorithm {
                 value[i][j] = 0;
             }
         }
-        Use_axis = (int)Pheno_Type[0][0];
+        Use_axis = (int) Pheno_Type[0][0];
 
         value[0][0] = Pheno_Type[0][1];
         value[0][1] = Pheno_Type[0][2];

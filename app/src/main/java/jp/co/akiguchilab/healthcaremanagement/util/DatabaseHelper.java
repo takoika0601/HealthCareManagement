@@ -1,4 +1,4 @@
-package jp.co.akiguchilab.healthcaremanagement;
+package jp.co.akiguchilab.healthcaremanagement.util;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,14 +8,11 @@ import android.database.sqlite.SQLiteStatement;
 
 import java.util.Date;
 
-import jp.co.akiguchilab.healthcaremanagement.util.CountUtil;
-
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = DatabaseHelper.class.getSimpleName();
 
     public DatabaseHelper(Context context) {
         super(context, "WalkCount", null, 1);
-        // TODO 自動生成されたコンストラクター・スタブ
     }
 
     @Override
@@ -53,31 +50,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         c.close();
         //DBUtils.dbTablesOutputLog(this);
         return ret;
-    }
-
-    //指定した過去日までの履歴の取得
-    //返り値:String[][] 1次（１：カウント、２：登録日) 2次(取得情報)
-    public String[][] selectHistoryList(int days) {
-        final SQLiteDatabase db = this.getReadableDatabase();
-        String date = CountUtil.dateformat("yyyyMMdd", new Date(), -days);
-
-        String sql = "SELECT H_CNT, HISTORY_DATE FROM WORK_COUNTER_HISTORY_WHERE HISTORY_DATE > ? ORDER BY HISTORY_DATE DESC;";
-
-        Cursor c = db.rawQuery(sql, new String[]{date});
-        c.moveToFirst();
-
-        int size = c.getCount();
-        String[][] list = new String[2][size];
-
-        for (int i = 0; i < list.length; i++) {
-            for (int j = 0; j < list[i].length; j++) {
-                list[i][j] = c.getString(0);
-                list[i][j] = c.getString(1);
-                c.moveToNext();
-            }
-        }
-        c.close();
-        return list;
     }
 
     //歩数の更新

@@ -28,7 +28,7 @@ public class ListViewItemAdapter extends ArrayAdapter<ListViewData> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = null;
 
-        if(convertView == null) {
+        if (convertView == null) {
             view = inflater.inflate(R.layout.my_custom_view, null);
         } else {
             view = convertView;
@@ -38,7 +38,7 @@ public class ListViewItemAdapter extends ArrayAdapter<ListViewData> {
         ImageView imageView = (ImageView) view.findViewById(R.id.imageView1);
         ListViewData item = (ListViewData) getItem(position);
 
-        if(loopCount % 2 == 0) {
+        if (loopCount % 2 == 0) {
             textView.setTextColor(mContext.getResources().getColor(R.color.listfirst));
         } else {
             textView.setTextColor(mContext.getResources().getColor(R.color.listsecond));

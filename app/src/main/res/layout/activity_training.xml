@@ -30,7 +30,7 @@
             android:src="@drawable/apple"
             android:layout_alignParentRight="true"
             android:background="@drawable/apple"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"/>
 
         <TextView
             android:id="@+id/text"

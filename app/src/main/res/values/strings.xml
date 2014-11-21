@@ -8,6 +8,6 @@
     <string name="title_activity_setting_view">SettingViewActivity</string>
     <string name="title_activity_camera">CameraActivity</string>
     <string name="title_activity_calendar">CalendarActivity</string>
-    
+
     <string name="format_month_year">yyyy年MM月</string>
 </resources>

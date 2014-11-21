@@ -61,7 +61,8 @@ public class SettingViewActivity extends Activity implements View.OnClickListene
         editText = (EditText) findViewById(R.id.settingEdit);
         switch (v.getId()) {
             case R.id.settingButton0:
-                if (!(editText.getText().toString().equals("")))   editText.setText(editText.getText() + "0");
+                if (!(editText.getText().toString().equals("")))
+                    editText.setText(editText.getText() + "0");
                 break;
             case R.id.settingButton1:
                 editText.setText(editText.getText() + "1");
