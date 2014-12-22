@@ -38,6 +38,7 @@ public class CalendarView extends LinearLayout {
     // 通常の背景色
     private static final int DEFAULT_BACKGROUND_COLOR = Color.TRANSPARENT;
 
+
     private Calendar calendar = Calendar.getInstance();
 
     protected int PRESERVE_MONTH;
@@ -100,7 +101,7 @@ public class CalendarView extends LinearLayout {
             navBar.addView(btnBack);
 
             mTitleView = new TextView(context, attrs);
-            mTitleView.setGravity(Gravity.CENTER_HORIZONTAL); // 中央に表示
+            mTitleView.setGravity(Gravity.CENTER); // 中央に表示
             mTitleView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT, 80));
             mTitleView.setTextSize((int) (scaleDensity * 14));
             mTitleView.setTypeface(null, Typeface.BOLD); // 太字

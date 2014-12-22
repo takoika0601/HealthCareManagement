@@ -285,13 +285,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
             if (directory.exists()) {
                 if (directory.canWrite()) {
                     //書き込める場合、フォルダを作成
-                    File file = new File(directory.getAbsolutePath() + "/" + getString(R.string.app_name));
+                    File file = new File(directory.getAbsolutePath() + "/" + "HealthCare");
                     file.mkdir();
                 }
             }
 
             //補強運動において使用される閾値などを格納するファイルdum.csvを作成する
-            String filepath = directory.getAbsolutePath() + getString(R.string.app_name) + "/dum.csv";
+            String filepath = directory.getAbsolutePath() + "/HealthCare" + "/dum.csv";
             File filecheck = new File(filepath);
             try {
                 //ファイルが存在するかどうか
@@ -302,20 +302,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     );
                     int filevalue = 0;
                     //filevalue : 使用する軸の設定
-                    bw.write(filevalue);
+                    bw.write("0");
                     bw.newLine();
                     double valueXmin = -1.0;
                     double valueXmax = -0.4;
-                    //valueXmin, valueXmax : x軸の最小、最大値の設定
-                    bw.write(valueXmin + "," + valueXmax);
-                    double valueYmin = -1.0;
-                    double valueYmax = -0.4;
-                    //valueYmin, valueYmax : y軸の最小、最大値の設定
-                    bw.write(valueYmin + "," + valueYmax);
-                    double valueZmin = -1.0;
-                    double valueZmax = -0.4;
-                    //valueZmin, valueZmax : z軸の最小、最大値の設定
-                    bw.write(valueZmin + "," + valueZmax);
+                    //valueXmax, valueXmin : x軸の最大、最小値の設定
+                    bw.write(valueXmax + "," + valueXmin);
+                    bw.newLine();
+                    double valueY = 0;
+                    //valueYmax, valueYmin : y軸の最大、最小値の設定
+                    bw.write(valueY + "," + valueY);
+                    bw.newLine();
+                    double valueZ = 0;
+                    //valueZmax, valueZmin : z軸の最大、最小値の設定
+                    bw.write(valueZ + "," + valueZ);
+                    bw.flush();
                     bw.close();
                 }
             } catch (UnsupportedEncodingException e) {

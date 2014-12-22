@@ -1,12 +1,16 @@
 package jp.co.akiguchilab.healthcaremanagement.geneticalgorithm;
 
-import android.content.Context;
-import android.widget.Toast;
+import android.os.Environment;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import jp.co.akiguchilab.healthcaremanagement.training.TrainingSetting;
 
 /**
  * Created by i09324 on 2014/08/31.
@@ -23,7 +27,6 @@ public class GeneticAlgorithm {
     private int p_target = 5;
     private int p_count = 0;
 
-    private float rankingALL = 0;
     private float[] ranking = new float[POPULATION];
     private float[] Newranking = new float[POPULATION];
     private double Chooser;
@@ -72,7 +75,7 @@ public class GeneticAlgorithm {
     private float[][] Pheno_Type = new float[POPULATION][PHENOTYPE];
     private float[][] New_Pheno_Type = new float[POPULATION][PHENOTYPE];
 
-    public void doGA(Context context, ArrayList<AccelerometerData> data) {
+    public void doGA(ArrayList<AccelerometerData> data) {
         CreateGane();
 
         setData(data);
@@ -666,7 +669,8 @@ public class GeneticAlgorithm {
         value[2][0] = Pheno_Type[0][5];
         value[2][1] = Pheno_Type[0][6];
 
-        Toast.makeText(context, "Calcuration finished ! Push the Practice button", Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, "Calcuration finished ! Push the Practice button", Toast.LENGTH_LONG).show();
+        Register(Use_axis, value);
     }
 
     private void CreateGane() {
@@ -721,6 +725,52 @@ public class GeneticAlgorithm {
             x_value = x_max_value - x_min_value;
             y_value = y_max_value - y_min_value;
             z_value = z_max_value - z_min_value;
+        }
+    }
+
+    void Register(int Use_axis, double[][] value) {
+        File directory = Environment.getExternalStorageDirectory();
+        String folderpath = directory.getAbsolutePath() + "/HealthCare";
+        String filepath = null;
+        int flag_ga = 2;
+
+        switch (flag_ga) {
+            case 0:
+                break;
+            case 1:
+                filepath = folderpath + File.separator + "dum.csv";
+                break;
+            case 2:
+                filepath = folderpath + File.separator + "add1.csv";
+                break;
+            case 3:
+                filepath = folderpath + File.separator + "add2.csv";
+                break;
+            case 4:
+                filepath = folderpath + File.separator + "add3.csv";
+                break;
+            default:
+                break;
+        }
+        try {
+            BufferedWriter bw = new BufferedWriter(
+                    new OutputStreamWriter(
+                            new FileOutputStream(filepath, false), "UTF-8"));
+            bw.write(Use_axis);
+            for (int i = 0; i < 3; i++) {
+                bw.newLine();
+                bw.write(value[i][0] + "," + value[i][1]);
+            }
+            bw.flush();
+            bw.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
     }
 }

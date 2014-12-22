@@ -7,8 +7,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +43,6 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
-
-
     }
 
     @Override
@@ -64,7 +62,47 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
         } else {
             disableSensor();
             OnOff.setText("開始");
-            GA.doGA(this, accelerometer);
+/*
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    File sdcard_path = new File(Environment.getExternalStorageDirectory().getPath() + "/HealthCare");
+                    Date date = new Date();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+
+                    String Fs = File.separator;
+
+                    String filePath = sdcard_path + Fs + "GA" + dateFormat.format(date) + ".txt";
+                    if (!sdcard_path.exists()) {
+                        sdcard_path.mkdir();
+                    }
+
+                    try {
+                        BufferedWriter bw = new BufferedWriter(
+                                new OutputStreamWriter(
+                                        new FileOutputStream(filePath, false), "UTF-8")
+                        );
+
+                        for (int i = 0; i < accelerometer.size(); i++) {
+                            bw.write(accelerometer.get(i).getAccelerometer_x() + "");
+                            bw.newLine();
+                        }
+                        bw.flush();
+                        bw.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
+*/
+            Thread GAThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    GA.doGA(accelerometer);
+                }
+            });
+            GAThread.start();
         }
     }
 

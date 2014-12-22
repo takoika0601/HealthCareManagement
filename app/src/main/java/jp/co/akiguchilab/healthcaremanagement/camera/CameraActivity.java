@@ -25,6 +25,7 @@ import jp.co.akiguchilab.healthcaremanagement.R;
 
 public class CameraActivity extends Activity implements View.OnClickListener {
     private static final String TAG = CameraActivity.class.getSimpleName();
+
     private static final int MEDIA_TYPE_IMAGE = 100;
     private static final int IMAGE_CAPTURE = 50;
     private static final int REQUEST_GALLARY = 60;

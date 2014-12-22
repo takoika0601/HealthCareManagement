@@ -11,11 +11,11 @@
 
     <TextView
         android:id="@+id/camera_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:text="今からとる写真はどれですか？"
+        android:text="撮った写真はどれですか？"
         android:textSize="35sp"/>
 
     <LinearLayout
