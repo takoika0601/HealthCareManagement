@@ -1,6 +1,7 @@
 package jp.co.akiguchilab.healthcaremanagement.geneticalgorithm;
 
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,6 +12,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * Created by i09324 on 2014/08/31.
@@ -42,19 +44,23 @@ public class GeneticAlgorithm {
     private float y_min_value = 0;
     private float z_max_value = 0;
     private float z_min_value = 0;
-    private float x_value = 0;
-    private float y_value = 0;
-    private float z_value = 0;
-    private float x_width = 0;
-    private float y_width = 0;
-    private float z_width = 0;
+    private float max_value = 0;
+    private float min_value = 0;
+    private float x_value_width = 0;
+    private float y_value_width = 0;
+    private float z_value_width = 0;
     private float ThresholdX_min = 0;
     private float ThresholdX_max = 0;
     private float ThresholdY_min = 0;
     private float ThresholdY_max = 0;
     private float ThresholdZ_min = 0;
     private float ThresholdZ_max = 0;
-    private int Use_axis = 0;
+    private float ThresholdX_width = 0;
+    private float ThresholdY_width = 0;
+    private float ThresholdZ_width = 0;
+
+    private float[][] Pheno_Type;
+    private float[][] New_Pheno_Type;
     private double value[][] = new double[3][2];
 
     private float x_second = 0;
@@ -72,56 +78,50 @@ public class GeneticAlgorithm {
     private float tmp;
     private float width;
     private float par;
-    private float[][] Pheno_Type = new float[POPULATION][PHENOTYPE];
-    private float[][] New_Pheno_Type = new float[POPULATION][PHENOTYPE];
+    private int Use_axis;
 
     public void doGA(ArrayList<AccelerometerData> data) {
-        CreateGane();
-
         setData(data);
 
-        if (x_value < y_value) {
-            if (y_value < z_value) {
+        CreateGane();
+        if (x_value_width < y_value_width) {
+            if (y_value_width < z_value_width) {
                 Zflag = 3;
-                if (y_value < x_value && (x_value > z_value * 0.5f)) {
-                    Sflag = 1;
-                } else if (x_value < y_value && (y_value > z_value * 0.5f)) {
+                if (x_value_width < y_value_width && (y_value_width > z_value_width * 0.5f)) {
                     Sflag = 2;
                 }
             } else {
                 Zflag = 2;
-                if (x_value < z_value && (z_value > y_value * 0.5f)) {
+                if (x_value_width < z_value_width && (z_value_width > y_value_width * 0.5f)) {
                     Sflag = 3;
-                } else if (z_value < x_value && (y_value > y_value * 0.5f)) {
+                } else if (z_value_width < x_value_width && (x_value_width > y_value_width * 0.5f)) {
                     Sflag = 1;
                 }
             }
         } else {
-            if (x_value < z_value) {
+            if (x_value_width < z_value_width) {
                 Zflag = 3;
-                if (x_value < y_value && (y_value > z_value * 0.5f)) {
-                    Sflag = 2;
-                } else if (y_value < x_value && (x_value > z_value * 0.5f)) {
+                if (y_value_width < x_value_width && (x_value_width > z_value_width * 0.5f)) {
                     Sflag = 1;
                 }
             } else {
                 Zflag = 1;
-                if (z_value < y_value && (y_value > x_value * 0.5f)) {
+                if (z_value_width < y_value_width && (y_value_width > x_value_width * 0.5f)) {
                     Sflag = 2;
-                } else if (y_value < z_value && (z_value > x_value * 0.5f)) {
+                } else if (y_value_width < z_value_width && (z_value_width > x_value_width * 0.5f)) {
                     Sflag = 3;
                 }
             }
         }
-        x_value = x_value * 0.7f;
-        y_value = y_value * 0.7f;
-        z_value = z_value * 0.7f;
+        x_value_width = x_value_width * 0.7f;
+        y_value_width = y_value_width * 0.7f;
+        z_value_width = z_value_width * 0.7f;
 
         while (ga_count <= 10000) {
             for (int i = 0; i < POPULATION; i++) {
                 ranking[i] = 0;
 
-                for (int j = 0; j < PHENOTYPE - 1; j++) {
+                for (int j = 1; j < PHENOTYPE - 1; j+=2) {
                     if (Pheno_Type[i][j] < Pheno_Type[i][j + 1]) {
                         tmp = Pheno_Type[i][j];
                         Pheno_Type[i][j] = Pheno_Type[i][j + 1];
@@ -134,6 +134,7 @@ public class GeneticAlgorithm {
             elite_num = 1000;
             width = 0;
 
+            // 評価
             for (int i = 0; i < POPULATION; i++) {
                 p_count = 0;
                 SelectZ = (int) Pheno_Type[i][0];
@@ -251,81 +252,31 @@ public class GeneticAlgorithm {
                     }
                 }
 
-                if (ThresholdX_min < 0 && ThresholdX_max < 0) {
-                    if (ThresholdX_min < ThresholdX_max) {
-                        x_width = Math.abs(ThresholdX_max) - Math.abs(ThresholdX_min);
-                    } else {
-                        x_width = Math.abs(ThresholdX_min) - Math.abs(ThresholdX_max);
-                    }
-                } else if (ThresholdX_min > 0 && ThresholdX_max > 0) {
-                    if (ThresholdX_min < ThresholdX_max) {
-                        x_width = ThresholdX_max - ThresholdX_min;
-                    } else {
-                        x_width = ThresholdX_min - ThresholdX_max;
-                    }
-                } else if (ThresholdX_min < 0 && ThresholdX_max > 0) {
-                    x_width = ThresholdX_max - ThresholdX_min;
-                } else if (ThresholdX_min > 0 && ThresholdX_max < 0) {
-                    x_width = ThresholdX_min - ThresholdX_max;
-                }
-
-                if (ThresholdY_min < 0 && ThresholdY_max < 0) {
-                    if (ThresholdY_min < ThresholdY_max) {
-                        y_width = Math.abs(ThresholdY_max) - Math.abs(ThresholdY_min);
-                    } else {
-                        y_width = Math.abs(ThresholdY_min) - Math.abs(ThresholdY_max);
-                    }
-                } else if (ThresholdY_min > 0 && ThresholdY_max > 0) {
-                    if (ThresholdY_min < ThresholdY_max) {
-                        y_width = ThresholdY_max - ThresholdY_min;
-                    } else {
-                        y_width = ThresholdY_min - ThresholdY_max;
-                    }
-                } else if (ThresholdY_min < 0 && ThresholdY_max > 0) {
-                    y_width = ThresholdY_max - ThresholdY_min;
-                } else if (ThresholdY_min > 0 && ThresholdY_max < 0) {
-                    y_width = ThresholdY_min - ThresholdY_max;
-                }
-
-                if (ThresholdZ_min < 0 && ThresholdZ_max < 0) {
-                    if (ThresholdZ_min < ThresholdZ_max) {
-                        z_width = Math.abs(ThresholdZ_max) - Math.abs(ThresholdZ_min);
-                    } else {
-                        z_width = Math.abs(ThresholdZ_min) - Math.abs(ThresholdZ_max);
-                    }
-                } else if (ThresholdZ_min > 0 && ThresholdZ_max > 0) {
-                    if (ThresholdZ_min < ThresholdZ_max) {
-                        z_width = ThresholdZ_max - ThresholdZ_min;
-                    } else {
-                        z_width = ThresholdZ_min - ThresholdZ_max;
-                    }
-                } else if (ThresholdZ_min < 0 && ThresholdZ_max > 0) {
-                    z_width = ThresholdZ_max - ThresholdZ_min;
-                } else if (ThresholdZ_min > 0 && ThresholdZ_max < 0) {
-                    z_width = ThresholdZ_min - ThresholdZ_max;
-                }
+                ThresholdX_width = Math.abs(ThresholdX_max - ThresholdX_min);
+                ThresholdY_width = Math.abs(ThresholdY_max - ThresholdY_min);
+                ThresholdZ_width = Math.abs(ThresholdZ_max - ThresholdZ_min);
 
                 switch (SelectZ) {
                     case 0:
-                        par = x_width / x_value;
+                        par = ThresholdX_width / x_value_width;
                         break;
                     case 1:
-                        par = y_width / y_value;
+                        par = ThresholdY_width / y_value_width;
                         break;
                     case 2:
-                        par = z_width / z_value;
+                        par = ThresholdZ_width / z_value_width;
                         break;
                     case 3:
-                        par = ((x_width / x_value) + (y_width / y_value)) / 2;
+                        par = ((ThresholdX_width / x_value_width) + (ThresholdY_width / y_value_width)) / 2;
                         break;
                     case 4:
-                        par = ((y_width / y_value) + (z_width / z_value)) / 2;
+                        par = ((ThresholdY_width / y_value_width) + (ThresholdZ_width / z_value_width)) / 2;
                         break;
                     case 5:
-                        par = ((x_width / x_value) + (z_width / z_value)) / 2;
+                        par = ((ThresholdX_width / x_value_width) + (ThresholdZ_width / z_value_width)) / 2;
                         break;
                     case 6:
-                        par = ((x_width / x_value) + (y_width / y_value) + (z_width / z_value)) / 3;
+                        par = ((ThresholdX_width / x_value_width) + (ThresholdY_width / y_value_width) + (ThresholdZ_width / z_value_width)) / 3;
                         break;
                     default:
                         break;
@@ -660,6 +611,7 @@ public class GeneticAlgorithm {
                 value[i][j] = 0;
             }
         }
+
         Use_axis = (int) Pheno_Type[0][0];
 
         value[0][0] = Pheno_Type[0][1];
@@ -674,20 +626,21 @@ public class GeneticAlgorithm {
     }
 
     private void CreateGane() {
+        Random rnd = new Random();
         for (int i = 0; i < POPULATION; i++) {
             for (int j = 0; j < PHENOTYPE; j++) {
                 if (j == 0) {
-                    Pheno_Type[i][j] = (float) Math.random() % PHENOTYPE;
+                    Pheno_Type[i][j] = (float) rnd.nextInt(PHENOTYPE);
                 } else {
-                    Pheno_Type[i][j] = (((float) Math.random() % 300f) / 100f) - 1.5f;
+                    Pheno_Type[i][j] = (float) rnd.nextInt((int) (max_value - min_value)) + rnd.nextFloat() + min_value;
                 }
             }
 
-            for (int j = 1; j < 6; j++) {
+            for (int j = 1; j < 6; j+=2) {
                 if (Pheno_Type[i][j] < Pheno_Type[i][j + 1]) {
                     tmp = Pheno_Type[i][j];
                     Pheno_Type[i][j] = Pheno_Type[i][j + 1];
-                    Pheno_Type[i][j + 1] = Pheno_Type[i][j];
+                    Pheno_Type[i][j + 1] = tmp;
                 }
             }
         }
@@ -722,17 +675,35 @@ public class GeneticAlgorithm {
                     z_min_value = data.get(i).getAccelerometer_z();
                 }
             }
-            x_value = x_max_value - x_min_value;
-            y_value = y_max_value - y_min_value;
-            z_value = z_max_value - z_min_value;
+            x_value_width = x_max_value - x_min_value;
+            y_value_width = y_max_value - y_min_value;
+            z_value_width = z_max_value - z_min_value;
+
+
+            if (x_max_value > y_max_value && x_max_value > z_max_value) {
+                max_value = x_max_value;
+            } else if (y_max_value > x_max_value && y_max_value > z_max_value) {
+                max_value = y_max_value;
+            } else if (z_max_value > x_max_value && z_max_value > y_max_value) {
+                max_value = z_max_value;
+            }
+
+            if (x_min_value < y_min_value && x_min_value < z_min_value) {
+                min_value = x_min_value;
+            } else if (y_min_value < x_min_value && y_min_value < z_min_value) {
+                min_value = y_min_value;
+            } else if (z_min_value < x_min_value && z_min_value < y_min_value) {
+                min_value = z_min_value;
+            }
         }
     }
 
     void Register(int Use_axis, double[][] value) {
+        Log.d("Use", Use_axis + "");
         File directory = Environment.getExternalStorageDirectory();
         String folderpath = directory.getAbsolutePath() + "/HealthCare";
         String filepath = null;
-        int flag_ga = 2;
+        int flag_ga = 3;
 
         switch (flag_ga) {
             case 0:
@@ -756,6 +727,7 @@ public class GeneticAlgorithm {
             BufferedWriter bw = new BufferedWriter(
                     new OutputStreamWriter(
                             new FileOutputStream(filepath, false), "UTF-8"));
+            bw.newLine();
             bw.write(Use_axis);
             for (int i = 0; i < 3; i++) {
                 bw.newLine();

@@ -6,11 +6,19 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import jp.co.akiguchilab.healthcaremanagement.R;
@@ -29,6 +37,7 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
     private ArrayList<AccelerometerData> accelerometer = new ArrayList<AccelerometerData>();
 
     private GeneticAlgorithm GA = new GeneticAlgorithm();
+    private gatesth GATEST = new gatesth();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +71,7 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
         } else {
             disableSensor();
             OnOff.setText("開始");
-/*
+
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -72,34 +81,55 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
 
                     String Fs = File.separator;
 
-                    String filePath = sdcard_path + Fs + "GA" + dateFormat.format(date) + ".txt";
+                    String filePathx = sdcard_path + Fs + "GA" + dateFormat.format(date) + "x.txt";
+                    String filePathy = sdcard_path + Fs + "GA" + dateFormat.format(date) + "y.txt";
+                    String filePathz = sdcard_path + Fs + "GA" + dateFormat.format(date) + "z.txt";
                     if (!sdcard_path.exists()) {
                         sdcard_path.mkdir();
                     }
 
                     try {
-                        BufferedWriter bw = new BufferedWriter(
+                        BufferedWriter bwx = new BufferedWriter(
                                 new OutputStreamWriter(
-                                        new FileOutputStream(filePath, false), "UTF-8")
+                                        new FileOutputStream(filePathx, false), "UTF-8")
+                        );
+                        BufferedWriter bwy = new BufferedWriter(
+                                new OutputStreamWriter(
+                                        new FileOutputStream(filePathy, false), "UTF-8")
+                        );
+                        BufferedWriter bwz = new BufferedWriter(
+                                new OutputStreamWriter(
+                                        new FileOutputStream(filePathz, false), "UTF-8")
                         );
 
                         for (int i = 0; i < accelerometer.size(); i++) {
-                            bw.write(accelerometer.get(i).getAccelerometer_x() + "");
-                            bw.newLine();
+                            bwx.write(accelerometer.get(i).getAccelerometer_x() + "");
+                            bwx.newLine();
+                            /*
+                            bwy.write(accelerometer.get(i).getAccelerometer_y() + "");
+                            bwy.newLine();
+                            bwz.write(accelerometer.get(i).getAccelerometer_z() + "");
+                            bwz.newLine();
+                            */
                         }
-                        bw.flush();
-                        bw.close();
+                        bwx.flush();
+                        bwx.close();
+                        bwy.flush();
+                        bwy.close();
+                        bwz.flush();
+                        bwz.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             });
             thread.start();
-*/
+
             Thread GAThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    GA.doGA(accelerometer);
+                    //GA.doGA(accelerometer);
+                    GATEST.GAloop(accelerometer);
                 }
             });
             GAThread.start();
