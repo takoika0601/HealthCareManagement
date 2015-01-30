@@ -51,6 +51,8 @@ public class gatesth {
     private String filepath = null;
 
     public void GAloop(ArrayList<AccelerometerData> data) {
+        ThresholdData elite = null;
+
         setData(data);
 
         generate();
@@ -58,7 +60,12 @@ public class gatesth {
         for (int GAcount = 0; GAcount < 500; GAcount++) {
             measure(data);
 
-            ThresholdData elite = datas.get(0);
+            if (GAcount != 0) {
+                datas.remove(datas.size() - 1);
+                datas.add(elite);
+                Collections.sort(datas, new TheComparator());
+            }
+            elite = datas.get(0).clone();
 
             select();
 
@@ -68,9 +75,38 @@ public class gatesth {
 
             compare();
 
-            datas.add(datas.size(), elite);
         }
         measure(data);
+
+        datas.remove(datas.size() - 1);
+        datas.add(elite);
+
+        Collections.sort(datas, new TheComparator());
+
+        try {
+            String fitpath = folderpath + File.separator + "fitness.csv";
+            BufferedWriter fitbw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fitpath, true), "UTF-8"));
+
+            //fitbw.write("count," + datas.get(0).getX_ActivityCount() + ",");
+            /*
+            float average = 0;
+            for (int i = 0; i < datas.size(); i++) {
+                average += datas.get(i).getFitness();
+            }
+            average = average / datas.size();
+            */
+            fitbw.write("width," + datas.get(0).getThresholdX_width());
+            fitbw.newLine();
+
+            fitbw.flush();
+            fitbw.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         register();
     }
@@ -133,8 +169,8 @@ public class gatesth {
         for (int i = 0; i < POPULATION; i++) {
             ThresholdData data = new ThresholdData();
 
-            data.setThresholdX_min(random.nextInt((int) x_width - 1) + random.nextFloat() + x_min_value);
-            data.setThresholdX_max(random.nextInt((int) x_width - 1) + random.nextFloat() + x_min_value);
+            data.setThresholdX_min(random.nextInt((int) x_width) + random.nextFloat() + x_min_value);
+            data.setThresholdX_max(random.nextInt((int) x_width) + random.nextFloat() + x_min_value);
             
             /*
             data.setThresholdY_min(random.nextInt((int) (y_width)) + random.nextFloat() + y_min_value);
@@ -256,33 +292,8 @@ public class gatesth {
         // 降順ソート
         Collections.sort(datas, new TheComparator());
 
-        try {
-            BufferedWriter fitbw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fitpath, true), "UTF-8"));
-
-            fitbw.write("count," + datas.get(0).getX_ActivityCount());
-            fitbw.newLine();
-            /*
-            float average = 0;
-            for (int i = 0; i < datas.size(); i++) {
-                average += datas.get(i).getFitness();
-            }
-            average = average / datas.size();
-            */
-            fitbw.write("width," + datas.get(0).getThresholdX_width());
-            fitbw.newLine();
-
-            fitbw.flush();
-            fitbw.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //Log.d(TAG, "Thres max width is " + datas.get(0).getThreshold_width());
-        //Log.d(TAG, "Thres min width is " + datas.get(datas.size()-1).getThreshold_width());
+        //Log.d(TAG, "Thres max width is " + datas.get(0).getThresholdX_width());
+        //Log.d(TAG, "Thres min width is " + datas.get(datas.size()-1).getThresholdX_width());
     }
 
     private void select() {
@@ -320,240 +331,48 @@ public class gatesth {
 
     // 改善の余地有り　現在：ランダムでx,y,zのmin,maxを一つだけ入れ替える
     private void cross() {
-        int changeA, changeB;
-        float tmpA, tmpB = 0;
+        int change;
+        float tmp;
 
         for (int i = 0; i < POPULATION; i += 2) {
             if (random.nextInt(100) <= CROSS) {
-                /*
-                changeA = random.nextInt(5);
-                changeB = random.nextInt(5);
-                */
-                changeA = random.nextInt(1);
-                changeB = random.nextInt(1);
+                change = random.nextInt(1);
 
-                switch (changeA) {
-                    case 0:
-                        tmpA = datas.get(i).getThresholdX_max();
-
-                        switch (changeB) {
-                            case 0:
-                                tmpB = datas.get(i + 1).getThresholdX_max();
-                                datas.get(i + 1).setThresholdX_max(tmpA);
-                                break;
-
-                            case 1:
-                                tmpB = datas.get(i + 1).getThresholdX_min();
-                                datas.get(i + 1).setThresholdX_min(tmpA);
-                                break;
-
-                            case 2:
-                                tmpB = datas.get(i + 1).getThresholdY_max();
-                                datas.get(i + 1).setThresholdY_max(tmpA);
-                                break;
-
-                            case 3:
-                                tmpB = datas.get(i + 1).getThresholdY_min();
-                                datas.get(i + 1).setThresholdY_min(tmpA);
-                                break;
-
-                            case 4:
-                                tmpB = datas.get(i + 1).getThresholdZ_max();
-                                datas.get(i + 1).setThresholdZ_max(tmpA);
-                                break;
-
-                            case 5:
-                                tmpB = datas.get(i + 1).getThresholdZ_min();
-                                datas.get(i + 1).setThresholdZ_min(tmpA);
-
-                                break;
-                        }
-                        datas.get(i).setThresholdX_max(tmpB);
+                switch (change) {
+                    case 0: // x_maxの交換
+                        tmp = datas.get(i).getThresholdX_max();
+                        datas.get(i).setThresholdX_max(datas.get(i + 1).getThresholdX_max());
+                        datas.get(i + 1).setThresholdX_max(tmp);
                         break;
 
-                    case 1:
-                        tmpA = datas.get(i).getThresholdX_min();
-
-                        switch (changeB) {
-                            case 0:
-                                tmpB = datas.get(i + 1).getThresholdX_max();
-                                datas.get(i + 1).setThresholdX_max(tmpA);
-                                break;
-
-                            case 1:
-                                tmpB = datas.get(i + 1).getThresholdX_min();
-                                datas.get(i + 1).setThresholdX_min(tmpA);
-                                break;
-
-                            case 2:
-                                tmpB = datas.get(i + 1).getThresholdY_max();
-                                datas.get(i + 1).setThresholdY_max(tmpA);
-                                break;
-
-                            case 3:
-                                tmpB = datas.get(i + 1).getThresholdY_min();
-                                datas.get(i + 1).setThresholdY_min(tmpA);
-                                break;
-
-                            case 4:
-                                tmpB = datas.get(i + 1).getThresholdZ_max();
-                                datas.get(i + 1).setThresholdZ_max(tmpA);
-                                break;
-
-                            case 5:
-                                tmpB = datas.get(i + 1).getThresholdZ_min();
-                                datas.get(i + 1).setThresholdZ_min(tmpA);
-                                break;
-                        }
-                        datas.get(i).setThresholdX_min(tmpB);
+                    case 1: // x_minの交換
+                        tmp = datas.get(i).getThresholdX_min();
+                        datas.get(i).setThresholdX_min(datas.get(i + 1).getThresholdX_min());
+                        datas.get(i + 1).setThresholdX_min(tmp);
                         break;
 
-                    case 2:
-                        tmpA = datas.get(i).getThresholdY_max();
-
-                        switch (changeB) {
-                            case 0:
-                                tmpB = datas.get(i + 1).getThresholdX_max();
-                                datas.get(i + 1).setThresholdX_max(tmpA);
-                                break;
-
-                            case 1:
-                                tmpB = datas.get(i + 1).getThresholdX_min();
-                                datas.get(i + 1).setThresholdX_min(tmpA);
-                                break;
-
-                            case 2:
-                                tmpB = datas.get(i + 1).getThresholdY_max();
-                                datas.get(i + 1).setThresholdY_max(tmpA);
-                                break;
-
-                            case 3:
-                                tmpB = datas.get(i + 1).getThresholdY_min();
-                                datas.get(i + 1).setThresholdY_min(tmpA);
-                                break;
-
-                            case 4:
-                                tmpB = datas.get(i + 1).getThresholdZ_max();
-                                datas.get(i + 1).setThresholdZ_max(tmpA);
-                                break;
-
-                            case 5:
-                                tmpB = datas.get(i + 1).getThresholdZ_min();
-                                datas.get(i + 1).setThresholdZ_min(tmpA);
-                                break;
-                        }
-                        datas.get(i).setThresholdY_max(tmpB);
+                    case 2: // y_maxの交換
+                        tmp = datas.get(i).getThresholdY_max();
+                        datas.get(i).setThresholdY_max(datas.get(i + 1).getThresholdY_max());
+                        datas.get(i + 1).setThresholdY_max(tmp);
                         break;
 
-                    case 3:
-                        tmpA = datas.get(i).getThresholdY_min();
-
-                        switch (changeB) {
-                            case 0:
-                                tmpB = datas.get(i + 1).getThresholdX_max();
-                                datas.get(i + 1).setThresholdX_max(tmpA);
-                                break;
-
-                            case 1:
-                                tmpB = datas.get(i + 1).getThresholdX_min();
-                                datas.get(i + 1).setThresholdX_min(tmpA);
-                                break;
-
-                            case 2:
-                                tmpB = datas.get(i + 1).getThresholdY_max();
-                                datas.get(i + 1).setThresholdY_max(tmpA);
-                                break;
-
-                            case 3:
-                                tmpB = datas.get(i + 1).getThresholdY_min();
-                                datas.get(i + 1).setThresholdY_min(tmpA);
-                                break;
-
-                            case 4:
-                                tmpB = datas.get(i + 1).getThresholdZ_max();
-                                datas.get(i + 1).setThresholdZ_max(tmpA);
-                                break;
-
-                            case 5:
-                                tmpB = datas.get(i + 1).getThresholdZ_min();
-                                datas.get(i + 1).setThresholdZ_min(tmpA);
-                                break;
-                        }
-                        datas.get(i).setThresholdY_min(tmpB);
+                    case 3: // y_minの交換
+                        tmp = datas.get(i).getThresholdY_min();
+                        datas.get(i).setThresholdY_min(datas.get(i + 1).getThresholdY_min());
+                        datas.get(i + 1).setThresholdY_min(tmp);
                         break;
 
-                    case 4:
-                        tmpA = datas.get(i).getThresholdZ_max();
-
-                        switch (changeB) {
-                            case 0:
-                                tmpB = datas.get(i + 1).getThresholdX_max();
-                                datas.get(i + 1).setThresholdX_max(tmpA);
-                                break;
-
-                            case 1:
-                                tmpB = datas.get(i + 1).getThresholdX_min();
-                                datas.get(i + 1).setThresholdX_min(tmpA);
-                                break;
-
-                            case 2:
-                                tmpB = datas.get(i + 1).getThresholdY_max();
-                                datas.get(i + 1).setThresholdY_max(tmpA);
-                                break;
-
-                            case 3:
-                                tmpB = datas.get(i + 1).getThresholdY_min();
-                                datas.get(i + 1).setThresholdY_min(tmpA);
-                                break;
-
-                            case 4:
-                                tmpB = datas.get(i + 1).getThresholdZ_max();
-                                datas.get(i + 1).setThresholdZ_max(tmpA);
-                                break;
-
-                            case 5:
-                                tmpB = datas.get(i + 1).getThresholdZ_min();
-                                datas.get(i + 1).setThresholdZ_min(tmpA);
-                                break;
-                        }
-                        datas.get(i).setThresholdZ_max(tmpB);
+                    case 4: // z_maxの交換
+                        tmp = datas.get(i).getThresholdZ_max();
+                        datas.get(i).setThresholdZ_max(datas.get(i + 1).getThresholdZ_max());
+                        datas.get(i + 1).setThresholdZ_max(tmp);
                         break;
 
-                    case 5:
-                        tmpA = datas.get(i).getThresholdZ_min();
-
-                        switch (changeB) {
-                            case 0:
-                                tmpB = datas.get(i + 1).getThresholdX_max();
-                                datas.get(i + 1).setThresholdX_max(tmpA);
-                                break;
-
-                            case 1:
-                                tmpB = datas.get(i + 1).getThresholdX_min();
-                                datas.get(i + 1).setThresholdX_min(tmpA);
-                                break;
-
-                            case 2:
-                                tmpB = datas.get(i + 1).getThresholdY_max();
-                                datas.get(i + 1).setThresholdY_max(tmpA);
-                                break;
-
-                            case 3:
-                                tmpB = datas.get(i + 1).getThresholdY_min();
-                                datas.get(i + 1).setThresholdY_min(tmpA);
-                                break;
-
-                            case 4:
-                                tmpB = datas.get(i + 1).getThresholdZ_max();
-                                datas.get(i + 1).setThresholdZ_max(tmpA);
-                                break;
-
-                            case 5:
-                                tmpB = datas.get(i + 1).getThresholdZ_min();
-                                datas.get(i + 1).setThresholdZ_min(tmpA);
-                                break;
-                        }
-                        datas.get(i).setThresholdZ_min(tmpB);
+                    case 5: // z_minの交換
+                        tmp = datas.get(i).getThresholdZ_min();
+                        datas.get(i).setThresholdZ_min(datas.get(i + 1).getThresholdZ_min());
+                        datas.get(i + 1).setThresholdZ_min(tmp);
                         break;
                 }
             }

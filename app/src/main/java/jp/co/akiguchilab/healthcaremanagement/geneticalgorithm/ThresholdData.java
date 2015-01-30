@@ -1,6 +1,6 @@
 package jp.co.akiguchilab.healthcaremanagement.geneticalgorithm;
 
-public class ThresholdData {
+public class ThresholdData implements Cloneable{
     private static final String TAG = ThresholdData.class.getSimpleName();
 
     private float ThresholdX_min = 0;
@@ -105,11 +105,8 @@ public class ThresholdData {
     }
 
     public void calcFitness(int ActivityCount) {
-        if (ActivityCount <= 5) {
-            fitness = ActivityCount * ThresholdX_width;
-        } else {
-            fitness = 0;
-        }
+        int x = ActivityCount;
+        fitness = -1/5 * (float)(Math.pow(x - 5, 2)) + 5 * ThresholdX_width;
     }
 
     public float getFitness() {
@@ -122,5 +119,15 @@ public class ThresholdData {
 
     public int getX_ActivityCount() {
         return x_ActivityCount;
+    }
+
+    public ThresholdData clone() {
+        ThresholdData data = new ThresholdData();
+        data.setThresholdX_min(ThresholdX_min);
+        data.setThresholdX_max(ThresholdX_max);
+        data.setThresholdX_width(ThresholdX_width);
+        data.setX_ActivityCount(x_ActivityCount);
+
+        return data;
     }
 }
