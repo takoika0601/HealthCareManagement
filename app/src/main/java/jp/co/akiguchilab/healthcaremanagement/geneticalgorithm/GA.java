@@ -37,7 +37,6 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
     private ArrayList<AccelerometerData> accelerometer = new ArrayList<AccelerometerData>();
 
     private GeneticAlgorithm GA = new GeneticAlgorithm();
-    private gatesth GATEST = new gatesth();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,12 +104,10 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
                         for (int i = 0; i < accelerometer.size(); i++) {
                             bwx.write(accelerometer.get(i).getAccelerometer_x() + "");
                             bwx.newLine();
-                            /*
                             bwy.write(accelerometer.get(i).getAccelerometer_y() + "");
                             bwy.newLine();
                             bwz.write(accelerometer.get(i).getAccelerometer_z() + "");
                             bwz.newLine();
-                            */
                         }
                         bwx.flush();
                         bwx.close();
@@ -128,8 +125,7 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
             Thread GAThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    //GA.doGA(accelerometer);
-                    GATEST.GAloop(accelerometer);
+                    GA.start(accelerometer);
                 }
             });
             GAThread.start();

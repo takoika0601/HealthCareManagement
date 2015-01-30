@@ -7,8 +7,8 @@ import jp.co.akiguchilab.healthcaremanagement.geneticalgorithm.ThresholdData;
 public class TheComparator implements Comparator<ThresholdData> {
 
     public int compare(ThresholdData a, ThresholdData b) {
-        double fitnessA = a.getThresholdX_width();
-        double fitnessB = b.getThresholdX_width();
+        double fitnessA = a.getFitness();
+        double fitnessB = b.getFitness();
 
         if (fitnessA > fitnessB) {
             return -1;
