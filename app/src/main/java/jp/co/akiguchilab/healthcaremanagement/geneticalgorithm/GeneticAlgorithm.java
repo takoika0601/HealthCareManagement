@@ -70,6 +70,8 @@ public class GeneticAlgorithm {
             }
             elite = datas.get(0).clone();
 
+            WriteElite(elite);
+
             select();
 
             cross();
@@ -431,6 +433,35 @@ public class GeneticAlgorithm {
             bw.write("z," + datas.get(0).getThresholdZ_max() + "," + datas.get(0).getThresholdZ_min());
             bw.newLine();
             */
+            bw.flush();
+            bw.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void WriteElite(ThresholdData elite) {
+        String elitepath = folderpath + File.separator + "elite.csv";
+        float average = 0.0f;
+
+        for (int i = 0; i < datas.size(); i++) {
+            average += datas.get(i).getThresholdX_width();
+        }
+        average = average / (datas.size() - 1);
+
+        try {
+            BufferedWriter bw = new BufferedWriter(
+                    new OutputStreamWriter(
+                            new FileOutputStream(elitepath, true), "UTF-8"));
+
+            bw.write("elite," + elite.getThresholdX_width() + ",average," + average);
+            bw.newLine();
             bw.flush();
             bw.close();
         } catch (FileNotFoundException e) {
