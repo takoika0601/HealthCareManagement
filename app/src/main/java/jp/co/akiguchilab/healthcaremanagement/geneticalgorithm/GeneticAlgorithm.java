@@ -451,7 +451,7 @@ public class GeneticAlgorithm {
         float average = 0.0f;
 
         for (int i = 0; i < datas.size(); i++) {
-            average += datas.get(i).getThresholdX_width();
+            average += datas.get(i).getFitness();
         }
         average = average / (datas.size() - 1);
 
@@ -460,7 +460,7 @@ public class GeneticAlgorithm {
                     new OutputStreamWriter(
                             new FileOutputStream(elitepath, true), "UTF-8"));
 
-            bw.write("elite," + elite.getThresholdX_width() + ",average," + average);
+            bw.write("elite," + elite.getFitness() + ",average," + average);
             bw.newLine();
             bw.flush();
             bw.close();
