@@ -97,12 +97,10 @@ public class GeneticAlgorithm {
         // 初期値の入力
         x_max_value = data.get(i).getAccelerometer_x();
         x_min_value = data.get(i).getAccelerometer_x();
-        /*
         y_max_value = data.get(i).getAccelerometer_x();
         y_min_value = data.get(i).getAccelerometer_x();
         z_max_value = data.get(i).getAccelerometer_x();
         z_min_value = data.get(i).getAccelerometer_x();
-        */
 
         // 次のデータと比較して、一番大きい(小さい)ものを保存する
         for (i = 1; i < data.size(); i++) {
@@ -112,7 +110,6 @@ public class GeneticAlgorithm {
                 x_min_value = data.get(i).getAccelerometer_x();
             }
 
-            /*
             if (y_max_value < data.get(i).getAccelerometer_y()) {
                 y_max_value = data.get(i).getAccelerometer_y();
             } else if (y_min_value > data.get(i).getAccelerometer_y()) {
@@ -124,25 +121,12 @@ public class GeneticAlgorithm {
             } else if (z_min_value > data.get(i).getAccelerometer_z()) {
                 z_min_value = data.get(i).getAccelerometer_z();
             }
-            */
         }
 
         // 各軸の加速度の幅を求める
         x_width = x_max_value - x_min_value;
-
-        /*
-        if ((y_max_value > 0 && y_min_value > 0) || (y_max_value < 0 && y_min_value < 0)) {
-            y_width = Math.abs(Math.abs(y_max_value) - Math.abs(y_min_value));
-        } else if (y_max_value > 0 && y_min_value < 0) {
-            y_width = Math.abs(y_max_value - y_min_value);
-        }
-
-        if ((z_max_value > 0 && z_min_value > 0) || (z_max_value < 0 && z_min_value < 0)) {
-            z_width = Math.abs(Math.abs(z_max_value) - Math.abs(z_min_value));
-        } else if (z_max_value > 0 && z_min_value < 0) {
-            z_width = Math.abs(z_max_value - z_min_value);
-        }
-        */
+        y_width = y_max_value - y_min_value;
+        z_width = z_max_value - z_min_value;
     }
 
     private void generate() {
@@ -152,12 +136,11 @@ public class GeneticAlgorithm {
             data.setThresholdX_min(random.nextInt((int) x_width) + random.nextFloat() + x_min_value);
             data.setThresholdX_max(random.nextInt((int) x_width) + random.nextFloat() + x_min_value);
 
-            /*
             data.setThresholdY_min(random.nextInt((int) (y_width)) + random.nextFloat() + y_min_value);
             data.setThresholdY_max(random.nextInt((int) (y_width)) + random.nextFloat() + y_min_value);
+
             data.setThresholdZ_min(random.nextInt((int) (z_width)) + random.nextFloat() + z_min_value);
             data.setThresholdZ_max(random.nextInt((int) (z_width)) + random.nextFloat() + z_min_value);
-            */
 
             datas.add(data);
         }
@@ -194,34 +177,26 @@ public class GeneticAlgorithm {
 
             Threshold_x_max = datas.get(i).getThresholdX_max();
             Threshold_x_min = datas.get(i).getThresholdX_min();
-
-            /*
             Threshold_y_max = datas.get(i).getThresholdY_max();
             Threshold_y_min = datas.get(i).getThresholdY_min();
             Threshold_z_max = datas.get(i).getThresholdZ_max();
             Threshold_z_min = datas.get(i).getThresholdZ_min();
-            */
 
             for (int j = 0; j < data.size(); j++) {
                 if (data.get(j).getAccelerometer_x() <= Threshold_x_min && !x_flag) {
                     x_flag = true;
                 }
-
-                /*
                 if (data.get(j).getAccelerometer_y() <= Threshold_y_min && !y_flag) {
                     y_flag = true;
                 }
                 if (data.get(j).getAccelerometer_z() <= Threshold_z_min && !z_flag) {
                     z_flag = true;
                 }
-                */
 
                 if (data.get(j).getAccelerometer_x() >= Threshold_x_max && x_flag) {
                     x_Activity_count++;
                     x_flag = false;
                 }
-
-                /*
                 if (data.get(j).getAccelerometer_y() >= Threshold_y_max && y_flag) {
                     y_Activity_count++;
                     y_flag = false;
@@ -230,7 +205,6 @@ public class GeneticAlgorithm {
                     z_Activity_count++;
                     z_flag = false;
                 }
-                */
             }
 
             // 各軸の閾値の幅を求める
@@ -240,7 +214,6 @@ public class GeneticAlgorithm {
                 Threshold_x_width = Math.abs(Threshold_x_max - Threshold_x_min);
             }
 
-            /*
             if ((Threshold_y_max > 0 && Threshold_y_min > 0) || (Threshold_y_max < 0 && Threshold_y_min < 0)) {
                 Threshold_y_width = Math.abs(Math.abs(Threshold_y_max) - Math.abs(Threshold_y_min));
             } else if (Threshold_y_max > 0 && Threshold_y_min < 0) {
@@ -252,16 +225,16 @@ public class GeneticAlgorithm {
             } else if (Threshold_z_max > 0 && Threshold_z_min < 0) {
                 Threshold_z_width = Math.abs(Threshold_z_max - Threshold_z_min);
             }
-            */
 
             datas.get(i).setX_ActivityCount(x_Activity_count);
             datas.get(i).setThresholdX_width(Threshold_x_width);
-            /*
-            datas.get(i).setThresholdY_width(Threshold_y_width);
-            datas.get(i).setThresholdZ_width(Threshold_z_width);
-            datas.get(i).calcThreshold_width();
 
-            */
+            datas.get(i).setY_ActivityCount(y_Activity_count);
+            datas.get(i).setThresholdY_width(Threshold_y_width);
+
+            datas.get(i).setZ_ActivityCount(z_Activity_count);
+            datas.get(i).setThresholdZ_width(Threshold_z_width);
+
             datas.get(i).calcFitness();
         }
         // 降順ソート
@@ -298,10 +271,11 @@ public class GeneticAlgorithm {
                     }
                 }
             }
-            new_datas.add(datas.get(Selectrank1));
-            new_datas.add(datas.get(Selectrank2));
+            new_datas.add(datas.get(Selectrank1).clone());
+            new_datas.add(datas.get(Selectrank2).clone());
         }
-        datas = new_datas;
+        datas = (ArrayList<ThresholdData>)new_datas.clone();
+        new_datas.clear();
     }
 
     // 改善の余地有り　現在：ランダムでx,y,zのmin,maxを一つだけ入れ替える
@@ -311,7 +285,7 @@ public class GeneticAlgorithm {
 
         for (int i = 0; i < POPULATION; i += 2) {
             if (random.nextInt(100) <= CROSS) {
-                change = random.nextInt(1);
+                change = random.nextInt(6);
 
                 switch (change) {
                     case 0: // x_maxの交換
@@ -359,12 +333,10 @@ public class GeneticAlgorithm {
             if (random.nextInt(100) <= MUTATION) {
                 datas.get(i).setThresholdX_max(random.nextInt((int) (x_max_value - x_min_value)) + random.nextFloat() + x_min_value);
                 datas.get(i).setThresholdX_min(random.nextInt((int) (x_max_value - x_min_value)) + random.nextFloat() + x_min_value);
-                /*
                 datas.get(i).setThresholdY_max(random.nextInt((int) (y_max_value - y_min_value)) + random.nextFloat() + y_min_value);
                 datas.get(i).setThresholdY_min(random.nextInt((int) (y_max_value - y_min_value)) + random.nextFloat() + y_min_value);
                 datas.get(i).setThresholdZ_max(random.nextInt((int) (z_max_value - z_min_value)) + random.nextFloat() + z_min_value);
                 datas.get(i).setThresholdZ_min(random.nextInt((int) (z_max_value - z_min_value)) + random.nextFloat() + z_min_value);
-                */
             }
         }
     }
@@ -380,7 +352,7 @@ public class GeneticAlgorithm {
                 datas.get(i).setThresholdX_min(xmax);
                 datas.get(i).setThresholdX_max(xmin);
             }
-            /*
+
             ymax = datas.get(i).getThresholdY_max();
             ymin = datas.get(i).getThresholdY_min();
             if (ymax < ymin) {
@@ -394,12 +366,11 @@ public class GeneticAlgorithm {
                 datas.get(i).setThresholdZ_min(zmax);
                 datas.get(i).setThresholdZ_max(zmin);
             }
-            */
         }
     }
 
     private void register() {
-        Log.d(TAG, "register actived :" + datas.get(0).getThresholdX_width());
+        Log.d(TAG, "register actived");
         int flag_ga = 3;
 
         switch (flag_ga) {
@@ -427,12 +398,11 @@ public class GeneticAlgorithm {
 
             bw.write("x," + datas.get(0).getThresholdX_max() + "," + datas.get(0).getThresholdX_min() + "," + datas.get(0).getX_ActivityCount());
             bw.newLine();
-            /*
-            bw.write("y," + datas.get(0).getThresholdY_max() + "," + datas.get(0).getThresholdY_min());
+            bw.write("y," + datas.get(0).getThresholdY_max() + "," + datas.get(0).getThresholdY_min() + "," + datas.get(0).getY_ActivityCount());
             bw.newLine();
-            bw.write("z," + datas.get(0).getThresholdZ_max() + "," + datas.get(0).getThresholdZ_min());
+            bw.write("z," + datas.get(0).getThresholdZ_max() + "," + datas.get(0).getThresholdZ_min() + "," + datas.get(0).getZ_ActivityCount());
             bw.newLine();
-            */
+
             bw.flush();
             bw.close();
         } catch (FileNotFoundException e) {

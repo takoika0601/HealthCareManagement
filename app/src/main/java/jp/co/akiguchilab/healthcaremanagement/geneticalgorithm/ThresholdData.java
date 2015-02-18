@@ -9,11 +9,14 @@ public class ThresholdData {
     private float ThresholdY_max = 0;
     private float ThresholdZ_min = 0;
     private float ThresholdZ_max = 0;
+
     private float ThresholdX_width = 0;
     private float ThresholdY_width = 0;
     private float ThresholdZ_width = 0;
-    private float Threshold_width = 0;
+
     private int x_ActivityCount = 0;
+    private int y_ActivityCount = 0;
+    private int z_ActivityCount = 0;
 
     private float fitness = 0;
 
@@ -64,24 +67,12 @@ public class ThresholdData {
         return ThresholdX_min;
     }
 
-    public float getThresholdX_width() {
-        return ThresholdX_width;
-    }
-
     public void setThresholdX_min(float thresholdX_min) {
         ThresholdX_min = thresholdX_min;
     }
 
-    public float getThresholdY_width() {
-        return ThresholdY_width;
-    }
-
     public void setThresholdX_width(float thresholdX_width) {
         ThresholdX_width = thresholdX_width;
-    }
-
-    public float getThresholdZ_width() {
-        return ThresholdZ_width;
     }
 
     public void setThresholdY_width(float thresholdY_width) {
@@ -92,33 +83,40 @@ public class ThresholdData {
         ThresholdZ_width = thresholdZ_width;
     }
 
-    public float getThreshold_width() {
-        return Threshold_width;
-    }
-
-    public void setThreshold_width(float threshold_width) {
-        Threshold_width = threshold_width;
-    }
-
-    public void calcThreshold_width() {
-        Threshold_width = ThresholdX_width + ThresholdY_width + ThresholdZ_width;
-    }
-
     public void calcFitness() {
-        int x = x_ActivityCount;
-        fitness = -15 * (float)(Math.pow(x - 5, 2)) + 20 + ThresholdX_width;
+        float x_fit = -15 * (float) (Math.pow(x_ActivityCount - 5, 2)) + 20 + ThresholdX_width;
+        float y_fit = -15 * (float) (Math.pow(y_ActivityCount - 5, 2)) + 20 + ThresholdY_width;
+        float z_fit = -15 * (float) (Math.pow(z_ActivityCount - 5, 2)) + 20 + ThresholdX_width;
+
+        fitness = x_fit + y_fit + z_fit;
     }
 
     public float getFitness() {
         return fitness;
     }
 
+    public int getX_ActivityCount() {
+        return x_ActivityCount;
+    }
+
     public void setX_ActivityCount(int x_activityCount) {
         x_ActivityCount = x_activityCount;
     }
 
-    public int getX_ActivityCount() {
-        return x_ActivityCount;
+    public int getY_ActivityCount() {
+        return y_ActivityCount;
+    }
+
+    public void setY_ActivityCount(int y_ActivityCount) {
+        this.y_ActivityCount = y_ActivityCount;
+    }
+
+    public int getZ_ActivityCount() {
+        return z_ActivityCount;
+    }
+
+    public void setZ_ActivityCount(int z_ActivityCount) {
+        this.z_ActivityCount = z_ActivityCount;
     }
 
     public ThresholdData clone() {
@@ -126,7 +124,19 @@ public class ThresholdData {
         data.setThresholdX_min(ThresholdX_min);
         data.setThresholdX_max(ThresholdX_max);
         data.setThresholdX_width(ThresholdX_width);
+
+        data.setThresholdY_min(ThresholdY_min);
+        data.setThresholdY_max(ThresholdY_max);
+        data.setThresholdY_width(ThresholdY_width);
+
+        data.setThresholdZ_min(ThresholdZ_min);
+        data.setThresholdZ_max(ThresholdZ_max);
+        data.setThresholdZ_width(ThresholdZ_width);
+
         data.setX_ActivityCount(x_ActivityCount);
+        data.setY_ActivityCount(y_ActivityCount);
+        data.setZ_ActivityCount(z_ActivityCount);
+
         data.calcFitness();
         return data;
     }
