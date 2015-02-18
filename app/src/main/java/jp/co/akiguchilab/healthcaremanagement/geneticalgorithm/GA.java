@@ -1,15 +1,19 @@
 package jp.co.akiguchilab.healthcaremanagement.geneticalgorithm;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -26,7 +30,9 @@ import jp.co.akiguchilab.healthcaremanagement.R;
 /**
  * Created by i09324 on 2014/08/28.
  */
-public class GA extends Activity implements SensorEventListener, OnClickListener {
+public class GA extends Activity implements SensorEventListener, OnClickListener, Runnable {
+    private static ProgressDialog waitDialog;
+
     private static int ACCELEROMETER_X = 0;
     private static int ACCELEROMETER_Y = 1;
     private static int ACCELEROMETER_Z = 2;
@@ -35,6 +41,7 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
 
     private SensorManager manager;
     private ArrayList<AccelerometerData> accelerometer = new ArrayList<AccelerometerData>();
+    private Thread thread;
 
     private GeneticAlgorithm GA = new GeneticAlgorithm();
 
@@ -44,8 +51,13 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
         setContentView(R.layout.genetic_layout);
 
         manager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        Button OnOff = (Button) findViewById(R.id.genetic_button);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.genetic_linearLayout_afterRun);
+        Button OnOff = (Button) findViewById(R.id.genetic_run_button);
+        Button practice = (Button) findViewById(R.id.genetic_practice_button);
+
+        layout.setVisibility(View.INVISIBLE);
         OnOff.setOnClickListener(this);
+        practice.setOnClickListener(this);
     }
 
     @Override
@@ -59,10 +71,9 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
         disableSensor();
     }
 
-
     @Override
     public void onClick(View v) {
-        Button OnOff = (Button) findViewById(R.id.genetic_button);
+        Button OnOff = (Button) findViewById(R.id.genetic_run_button);
 
         if (!SENSOR_ON_FLAG) {
             enableSensor();
@@ -71,65 +82,18 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
             disableSensor();
             OnOff.setText("開始");
 
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    File sdcard_path = new File(Environment.getExternalStorageDirectory().getPath() + "/HealthCare");
-                    Date date = new Date();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
-
-                    String Fs = File.separator;
-
-                    String filePathx = sdcard_path + Fs + "GA" + dateFormat.format(date) + "x.txt";
-                    String filePathy = sdcard_path + Fs + "GA" + dateFormat.format(date) + "y.txt";
-                    String filePathz = sdcard_path + Fs + "GA" + dateFormat.format(date) + "z.txt";
-                    if (!sdcard_path.exists()) {
-                        sdcard_path.mkdir();
-                    }
-
-                    try {
-                        BufferedWriter bwx = new BufferedWriter(
-                                new OutputStreamWriter(
-                                        new FileOutputStream(filePathx, false), "UTF-8")
-                        );
-                        BufferedWriter bwy = new BufferedWriter(
-                                new OutputStreamWriter(
-                                        new FileOutputStream(filePathy, false), "UTF-8")
-                        );
-                        BufferedWriter bwz = new BufferedWriter(
-                                new OutputStreamWriter(
-                                        new FileOutputStream(filePathz, false), "UTF-8")
-                        );
-
-                        for (int i = 0; i < accelerometer.size(); i++) {
-                            bwx.write(accelerometer.get(i).getAccelerometer_x() + "");
-                            bwx.newLine();
-                            bwy.write(accelerometer.get(i).getAccelerometer_y() + "");
-                            bwy.newLine();
-                            bwz.write(accelerometer.get(i).getAccelerometer_z() + "");
-                            bwz.newLine();
-                        }
-                        bwx.flush();
-                        bwx.close();
-                        bwy.flush();
-                        bwy.close();
-                        bwz.flush();
-                        bwz.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            thread.start();
-
-            Thread GAThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    GA.start(accelerometer);
-                }
-            });
-            GAThread.start();
+            showProgressDialog();
         }
+    }
+
+    private void showProgressDialog() {
+        waitDialog = new ProgressDialog(this);
+        waitDialog.setMessage("設定中...");
+        waitDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        waitDialog.show();
+
+        thread = new Thread(this);
+        thread.start();
     }
 
     private void enableSensor() {
@@ -145,6 +109,53 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
         manager.unregisterListener(this);
         SENSOR_ON_FLAG = false;
     }
+
+    @Override
+    public void run() {
+        try {
+            File sdcard_path = new File(Environment.getExternalStorageDirectory().getPath() + "/HealthCare");
+            Date date = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+
+            String Fs = File.separator;
+
+            String filePath = sdcard_path + Fs + "activity_" + dateFormat.format(date);
+
+            if (!sdcard_path.exists()) {
+                sdcard_path.mkdir();
+            }
+
+            BufferedWriter bw = new BufferedWriter(
+                    new OutputStreamWriter(
+                            new FileOutputStream(filePath, false), "UTF-8")
+            );
+
+            for (int i = 0; i < accelerometer.size(); i++) {
+                bw.write(accelerometer.get(i).getAccelerometer_x() + ",");
+                bw.write(accelerometer.get(i).getAccelerometer_y() + ",");
+                bw.write(accelerometer.get(i).getAccelerometer_z() + "");
+                bw.newLine();
+            }
+            bw.flush();
+            bw.close();
+
+            GA.start(accelerometer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        waitDialog.dismiss();
+        this.handler.sendEmptyMessage(0);
+    }
+
+    private Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            LinearLayout layout = (LinearLayout) findViewById(R.id.genetic_linearLayout_afterRun);
+            layout.setVisibility(View.VISIBLE);
+
+        }
+
+    };
 
     @Override
     public void onSensorChanged(SensorEvent event) {

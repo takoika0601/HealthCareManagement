@@ -28,10 +28,6 @@ public class GeneticAlgorithm {
     private static int CROSS = 75;
     // 突然変異率
     private static int MUTATION = 5;
-    // 生成する閾値の数（x_min x_max, y_min y_max, z_min z_max）
-    private static int VALUE = 6;
-    // 遺伝子に格納する変数の数 (xmin, xmax, ymin, ymax, zmin, zmax, xwidth, ywidth, zwidth, allwidth)
-    private static int INN = 10;
 
     private float x_max_value;
     private float x_min_value;
@@ -70,7 +66,7 @@ public class GeneticAlgorithm {
             }
             elite = datas.get(0).clone();
 
-            WriteElite(elite);
+            // WriteElite(elite);
 
             select();
 
@@ -416,6 +412,7 @@ public class GeneticAlgorithm {
         }
     }
 
+    /*
     private void WriteElite(ThresholdData elite) {
         String elitepath = folderpath + File.separator + "elite.csv";
         float average = 0.0f;
@@ -444,4 +441,5 @@ public class GeneticAlgorithm {
             e.printStackTrace();
         }
     }
+    */
 }

@@ -3,12 +3,57 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:background="@drawable/genetic_wall">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="ボタンを押すと、計測が始まります。
+登録したい運動を5回行ってください。
+運動を行った後、再度ボタンを押して計測を終了してください。"
+        android:textSize="19dp"/>
+
 
     <Button
-        android:id="@+id/genetic_button"
+        android:id="@+id/genetic_run_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="開始"/>
+        android:layout_gravity="center"
+        android:text="開始"
+        android:background="@drawable/button_frame"/>
+
+    <LinearLayout
+        android:id="@+id/genetic_linearLayout_afterRun"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="設定が完了しました！
+練習ボタンで練習ができます。"
+            android:textSize="19dp"/>
+
+        <Button
+            android:id="@+id/genetic_practice_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="練習"
+            android:background="@drawable/button_frame"/>
+        </LinearLayout>
+
 
 </LinearLayout>
