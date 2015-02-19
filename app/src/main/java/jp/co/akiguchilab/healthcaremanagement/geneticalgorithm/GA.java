@@ -171,7 +171,8 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
         }
     }
 
-    private void addTraining(String name) {
+    // 運動をcsvファイルに書き込み、追加する
+    private void addTraining(String name, String path) {
 
     }
 
