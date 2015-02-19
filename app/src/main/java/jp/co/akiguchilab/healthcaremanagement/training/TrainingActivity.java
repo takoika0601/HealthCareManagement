@@ -14,7 +14,12 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import jp.co.akiguchilab.healthcaremanagement.R;
 
@@ -40,16 +45,39 @@ public class TrainingActivity extends Activity implements View.OnClickListener {
         dog.setOnClickListener(this);
         bard.setOnClickListener(this);
 
-        Integer[] imgList = {R.drawable.nawatobi, R.drawable.danberu};
-        String[] msgList = {"なわとび", "ダンベル"};
+        // 補強運動の読み込み
+        readTraining();
+    }
 
+    private void readTraining() {
         ArrayList<ListViewData> objects = new ArrayList<ListViewData>();
 
-        for (int i = 0; i < 2; i++) {
-            ListViewData data = new ListViewData();
-            data.setString(msgList[i]);
-            data.setBitmap(BitmapFactory.decodeResource(getResources(), imgList[i]));
-            objects.add(data);
+        try {
+            InputStream in = openFileInput("Training.csv");
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String line = "";
+            String assets = "";
+
+            while ((line = br.readLine()) != null) {
+                StringTokenizer st = new StringTokenizer(line, ",");
+
+                ListViewData data = new ListViewData();
+
+                data.setString(st.nextToken());
+
+                if ((assets = st.nextToken()).equals("assets")) {
+                    data.setBitmap(BitmapFactory.decodeStream(new BufferedInputStream(this.getAssets().open(st.nextToken()))));
+                } else {
+                    data.setBitmap(BitmapFactory.decodeFile(assets));
+                }
+
+                objects.add(data);
+            }
+
+            in.close();
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         ListViewItemAdapter adapter = new ListViewItemAdapter(this, objects);

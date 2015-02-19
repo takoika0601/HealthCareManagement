@@ -1,7 +1,12 @@
 package jp.co.akiguchilab.healthcaremanagement.geneticalgorithm;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -10,9 +15,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import java.io.BufferedWriter;
@@ -39,10 +47,10 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
 
     private boolean SENSOR_ON_FLAG = false;
 
-    private SensorManager manager;
+    private String filepath = "";
     private ArrayList<AccelerometerData> accelerometer = new ArrayList<AccelerometerData>();
     private Thread thread;
-
+    private SensorManager manager;
     private GeneticAlgorithm GA = new GeneticAlgorithm();
 
     @Override
@@ -54,10 +62,12 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
         LinearLayout layout = (LinearLayout) findViewById(R.id.genetic_linearLayout_afterRun);
         Button OnOff = (Button) findViewById(R.id.genetic_run_button);
         Button practice = (Button) findViewById(R.id.genetic_practice_button);
+        Button complete = (Button) findViewById(R.id.genetic_complete_button);
 
         layout.setVisibility(View.INVISIBLE);
         OnOff.setOnClickListener(this);
         practice.setOnClickListener(this);
+        complete.setOnClickListener(this);
     }
 
     @Override
@@ -73,16 +83,31 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
 
     @Override
     public void onClick(View v) {
+        LinearLayout layout = (LinearLayout) findViewById(R.id.genetic_linearLayout_afterRun);
         Button OnOff = (Button) findViewById(R.id.genetic_run_button);
 
-        if (!SENSOR_ON_FLAG) {
-            enableSensor();
-            OnOff.setText("停止");
-        } else {
-            disableSensor();
-            OnOff.setText("開始");
+        switch (v.getId()) {
+            case R.id.genetic_run_button:
+                if (!SENSOR_ON_FLAG) {
+                    enableSensor();
+                    layout.setVisibility(View.INVISIBLE);
+                    OnOff.setText("停止");
+                } else {
+                    disableSensor();
+                    OnOff.setText("やり直す");
 
-            showProgressDialog();
+                    showProgressDialog();
+                }
+                break;
+
+            case R.id.genetic_practice_button:
+                //TODO
+                break;
+
+            case R.id.genetic_complete_button:
+                DialogFragment dialog = new confirmDialog();
+                dialog.show(getFragmentManager(), "dialog");
+                break;
         }
     }
 
@@ -94,6 +119,60 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
 
         thread = new Thread(this);
         thread.start();
+    }
+
+    public static class confirmDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("運動を登録しますか？")
+                    .setPositiveButton("はい", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            GA callingActivity = (GA) getActivity();
+                            callingActivity.addDialog(true);
+
+                            dismiss();
+                        }
+                    })
+                    .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    });
+            return builder.create();
+        }
+    }
+
+    private void addDialog(boolean save) {
+        if (save) {
+            LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+            final View layout = inflater.inflate(R.layout.add_training_dialog, (ViewGroup) findViewById(R.id.add_training_dialog));
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setView(layout)
+                    .setPositiveButton("登録", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            EditText text = (EditText) findViewById(R.id.add_training_dialog_edittext);
+                            String name = text.toString();
+                            addTraining(name, filepath);
+
+                            setResult(RESULT_OK, new Intent());
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    });
+            builder.show();
+        }
+    }
+
+    private void addTraining(String name) {
+
     }
 
     private void enableSensor() {

@@ -14,9 +14,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:text="ボタンを押すと、計測が始まります。
-登録したい運動を5回行ってください。
-運動を行った後、再度ボタンを押して計測を終了してください。"
+        android:text="ボタンを押すと、計測が始まります。\n登録したい運動を5回行ってください。\n運動を行った後、再度ボタンを押して\n計測を終了してください。"
         android:textSize="19dp"/>
 
 
@@ -42,8 +40,7 @@
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:text="設定が完了しました！
-練習ボタンで練習ができます。"
+            android:text="設定が完了しました！\n練習ボタンで練習ができます。"
             android:textSize="19dp"/>
 
         <Button
@@ -53,7 +50,26 @@
             android:layout_gravity="center"
             android:text="練習"
             android:background="@drawable/button_frame"/>
-        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="設定を完了する場合は、\n完了ボタンを押してください"
+            android:textSize="19dp"/>
+
+        <Button
+            android:id="@+id/genetic_complete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="完了"
+            android:background="@drawable/button_frame"/>
+    </LinearLayout>
 
 
 </LinearLayout>

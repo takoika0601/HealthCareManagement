@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -279,7 +280,23 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         mrJSON = new ParseUserInfoFromJSON();
 
-        if (isSdCardMounted() == true) {
+        // 初回起動時の処理
+        if (!thisPref.getBoolean("Launched", false)) {
+            startUp();
+
+            Editor editor = thisPref.edit();
+            editor.putBoolean("Launched", true);
+            editor.apply();
+        }
+
+        // View decor = this.getWindow().getDecorView();
+        // decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+        // View.SYSTEM_UI_FLAG_FULLSCREEN );
+        // getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    private void startUp() {
+        if (isSdCardMounted()) {
             File directory = Environment.getExternalStorageDirectory();
             //sdcardに書き込めるかどうか
             if (directory.exists()) {
@@ -329,14 +346,22 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 // TODO Auto-generated
                 e.printStackTrace();
             }
+
+            // 補強運動リスト Training.csvの作成
+            try {
+                OutputStream out = openFileOutput("Training.csv", MODE_PRIVATE);
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+
+                bw.write("ダンベル,assets,danberu.png," + filepath);
+                bw.flush();
+                bw.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             //SDカードがない場合
+            // TODO
         }
-
-        // View decor = this.getWindow().getDecorView();
-        // decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-        // View.SYSTEM_UI_FLAG_FULLSCREEN );
-        // getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
