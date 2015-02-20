@@ -49,7 +49,7 @@ public class GeneticAlgorithm {
     private String folderpath = directory.getAbsolutePath() + "/HealthCare";
     private String filepath = null;
 
-    public void start(ArrayList<AccelerometerData> data) {
+    public String start(ArrayList<AccelerometerData> data, int lineage) {
         ThresholdData elite = null;
 
         setData(data);
@@ -84,7 +84,9 @@ public class GeneticAlgorithm {
 
         Collections.sort(datas, new TheComparator());
 
-        register();
+        register(lineage);
+
+        return filepath;
     }
 
     private void setData(ArrayList<AccelerometerData> data) {
@@ -365,26 +367,15 @@ public class GeneticAlgorithm {
         }
     }
 
-    private void register() {
+    private void register(int linage) {
         Log.d(TAG, "register actived");
-        int flag_ga = 3;
 
-        switch (flag_ga) {
+        switch (linage) {
             case 0:
-                break;
-            case 1:
-                filepath = folderpath + File.separator + "dum.csv";
-                break;
-            case 2:
-                filepath = folderpath + File.separator + "add1.csv";
-                break;
-            case 3:
-                filepath = folderpath + File.separator + "add2.csv";
-                break;
-            case 4:
-                filepath = folderpath + File.separator + "add3.csv";
+                filepath = folderpath + File.separator + "add.csv";
                 break;
             default:
+                filepath = folderpath + File.separator + "add" + linage + ".csv";
                 break;
         }
         try {

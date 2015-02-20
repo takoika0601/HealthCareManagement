@@ -352,7 +352,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 OutputStream out = openFileOutput("Training.csv", MODE_PRIVATE);
                 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
 
-                bw.write("ダンベル,assets,danberu.png," + filepath);
+                bw.write("ダンベル,assets,danberu.png,dum.csv" + filepath);
                 bw.flush();
                 bw.close();
             } catch (Exception e) {

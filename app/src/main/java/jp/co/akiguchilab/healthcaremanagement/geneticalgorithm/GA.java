@@ -27,6 +27,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -148,15 +149,15 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
         if (save) {
             LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
             final View layout = inflater.inflate(R.layout.add_training_dialog, (ViewGroup) findViewById(R.id.add_training_dialog));
+            final EditText text = (EditText) layout.findViewById(R.id.add_training_dialog_edittext);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setView(layout)
                     .setPositiveButton("登録", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            EditText text = (EditText) findViewById(R.id.add_training_dialog_edittext);
-                            String name = text.toString();
-                            addTraining(name, filepath);
+                            String str = text.getText().toString();
+                            addTraining(str, filepath);
 
                             setResult(RESULT_OK, new Intent());
                             finish();
@@ -173,7 +174,19 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
 
     // 運動をcsvファイルに書き込み、追加する
     private void addTraining(String name, String path) {
+        try {
+            OutputStream out = openFileOutput("Training.csv", MODE_APPEND);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
 
+            bw.newLine();
+            bw.write(name + ",assets,danberu.png," + path);
+            bw.flush();
+
+            out.close();
+            bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void enableSensor() {
@@ -219,7 +232,7 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
             bw.flush();
             bw.close();
 
-            GA.start(accelerometer);
+            filePath = GA.start(accelerometer, getIntent().getIntExtra("linage", 0));
         } catch (IOException e) {
             e.printStackTrace();
         }

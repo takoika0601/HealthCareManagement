@@ -26,6 +26,7 @@ import jp.co.akiguchilab.healthcaremanagement.R;
 public class TrainingActivity extends Activity implements View.OnClickListener {
 
     private int flag = 0;
+    private int linage = 0;
     private ListView mListView;
 
     @Override
@@ -59,10 +60,11 @@ public class TrainingActivity extends Activity implements View.OnClickListener {
             String assets = "";
 
             while ((line = br.readLine()) != null) {
+                linage++;
+
                 StringTokenizer st = new StringTokenizer(line, ",");
 
                 ListViewData data = new ListViewData();
-
                 data.setString(st.nextToken());
 
                 if ((assets = st.nextToken()).equals("assets")) {
@@ -102,6 +104,7 @@ public class TrainingActivity extends Activity implements View.OnClickListener {
             flag = 0;
             // Toast.makeText(this, "seek", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, TrainingSetting.class);
+            intent.putExtra("linage", linage);
             startActivity(intent);
             //補強運動設定画面に遷移
         } else flag = 0;

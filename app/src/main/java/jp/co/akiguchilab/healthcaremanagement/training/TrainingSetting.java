@@ -11,8 +11,6 @@ import jp.co.akiguchilab.healthcaremanagement.R;
 import jp.co.akiguchilab.healthcaremanagement.geneticalgorithm.GA;
 
 public class TrainingSetting extends Activity implements View.OnClickListener {
-    private static final int REQUEST_CODE = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,19 +40,8 @@ public class TrainingSetting extends Activity implements View.OnClickListener {
                 startActivity(intent);
             case R.id.add:
                 intent.setClass(this, GA.class);
-                startActivityForResult(intent, REQUEST_CODE);
-                break;
-        }
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case REQUEST_CODE:
-                break;
-
-            default:
+                intent.putExtra("linage", getIntent().getIntExtra("linage", 0));
+                startActivity(intent);
                 break;
         }
     }

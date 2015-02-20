@@ -41,5 +41,7 @@
         android:id="@+id/add_training_dialog_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="19dp"/>
+        android:textSize="19dp"
+        android:inputType="text"
+        android:singleLine="true"/>
 </LinearLayout>
