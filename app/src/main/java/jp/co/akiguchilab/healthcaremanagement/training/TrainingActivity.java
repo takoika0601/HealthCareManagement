@@ -45,11 +45,9 @@ public class TrainingActivity extends Activity implements View.OnClickListener {
         apple.setOnClickListener(this);
         dog.setOnClickListener(this);
         bard.setOnClickListener(this);
-
-        // 補強運動の読み込み
-        readTraining();
     }
 
+    // 補強運動の読み込み
     private void readTraining() {
         ArrayList<ListViewData> objects = new ArrayList<ListViewData>();
 
@@ -114,6 +112,7 @@ public class TrainingActivity extends Activity implements View.OnClickListener {
     protected void onResume() {
         super.onResume();
         registerForContextMenu(mListView);
+        readTraining();
     }
 
     @Override
