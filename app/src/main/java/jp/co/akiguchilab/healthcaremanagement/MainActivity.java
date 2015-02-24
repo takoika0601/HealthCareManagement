@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,6 +57,7 @@ import jp.co.akiguchilab.healthcaremanagement.training.TrainingActivity;
 import jp.co.akiguchilab.healthcaremanagement.util.ParseUserInfoFromJSON;
 
 public class MainActivity extends Activity implements View.OnClickListener {
+    private String TAG = getPackageName().getClass().getSimpleName();
 
     boolean inService = false;
     boolean isAuth = false;
@@ -296,6 +298,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void startUp() {
+        Log.d(TAG, "start_up");
+
         if (isSdCardMounted()) {
             File directory = Environment.getExternalStorageDirectory();
             //sdcardに書き込めるかどうか
@@ -497,6 +501,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         TextView counter;
         boolean runflg = true;
+        long count;
 
         public ViewRefresh() {
             counter = (TextView) findViewById(R.id.counter);
@@ -515,7 +520,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     public void run() {
                         try {
                             // 歩数を取得して表示する
-                            counter.setText("" + countService.getCounter());
+                            if ((count = countService.getCounter()) != -1) {
+                                counter.setText("" + countService.getCounter());
+                            } else {
+                                counter.setText("0");
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -628,7 +637,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     protected void onResume() {
         super.onResume();
         /*
-		 * //音声データを読み込み mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC,
+         * //音声データを読み込み mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC,
 		 * 0); mSoundId = mSoundPool.load(getApplicationContext(), R.raw.a, 0);
 		 */
         inService = isServiceActive(thisService);
@@ -664,11 +673,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		/*
 		 * //音声データをリリースする mSoundPool.release();
 		 */
-        try {
-            thread.close();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
+
+        ViewRefresh refresh = new ViewRefresh();
+        refresh.close();
     }
 
     @Override

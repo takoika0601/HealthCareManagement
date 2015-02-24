@@ -137,6 +137,8 @@ public class CameraActivity extends Activity implements View.OnClickListener {
                 imageView.setImageBitmap(img);
             } catch (FileNotFoundException e) {
                 Log.d(TAG, "foooo");
+            } catch (NullPointerException e) {
+                Log.d(TAG, "No Select");
             }
         }
     }

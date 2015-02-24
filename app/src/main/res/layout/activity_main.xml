@@ -4,47 +4,6 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/kabe">
 
-    <RelativeLayout
-        android:id="@+id/cornerLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true">
-
-        <ImageButton
-            android:id="@+id/clover"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:background="#00000000"
-            android:src="@drawable/clover"/>
-
-        <ImageButton
-            android:id="@+id/apple"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="#00000000"
-            android:src="@drawable/apple"/>
-
-        <ImageButton
-            android:id="@+id/dog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:background="#00000000"
-            android:src="@drawable/dog"/>
-
-        <ImageButton
-            android:id="@+id/bard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:background="#00ffffff"
-            android:src="@drawable/bard"/>
-    </RelativeLayout>
-
     <LinearLayout
         android:id="@+id/centerInParentLayout"
         android:layout_width="match_parent"
@@ -57,8 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/centerInParentLayout"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp">
 
         <ImageButton
             android:id="@+id/main_calendar"

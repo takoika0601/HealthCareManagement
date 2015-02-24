@@ -111,8 +111,9 @@ public class TrainingActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        registerForContextMenu(mListView);
+
         readTraining();
+        registerForContextMenu(mListView);
     }
 
     @Override
