@@ -4,6 +4,7 @@
     <string name="app_name">健康管理</string>
     <string name="action_settings">Settings</string>
 
+    <string name="title_activity_trainingselect">TrainingSelectActivity</string>
     <string name="title_activity_training">TrainingActivity</string>
     <string name="title_activity_setting_view">SettingViewActivity</string>
     <string name="title_activity_camera">CameraActivity</string>

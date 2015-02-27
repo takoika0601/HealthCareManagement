@@ -57,7 +57,7 @@ import jp.co.akiguchilab.healthcaremanagement.training.TrainingSelectActivity;
 import jp.co.akiguchilab.healthcaremanagement.util.ParseUserInfoFromJSON;
 
 public class MainActivity extends Activity implements View.OnClickListener {
-    private String TAG = getPackageName().getClass().getSimpleName();
+    //private String TAG = getPackageName().getClass().getSimpleName();
 
     boolean inService = false;
     boolean isAuth = false;
@@ -298,7 +298,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void startUp() {
-        Log.d(TAG, "start_up");
+        //Log.d(TAG, "start_up");
 
         if (isSdCardMounted()) {
             File directory = Environment.getExternalStorageDirectory();

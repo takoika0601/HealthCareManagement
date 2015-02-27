@@ -16,8 +16,7 @@
         android:id="@+id/training_counterLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/training_centerInParentLayout"
-        android:layout_centerHorizontal="true">
+        android:layout_above="@id/training_centerInParentLayout">
 
         <TextView
             android:id="@+id/training_counter"
@@ -34,9 +33,25 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/training_counter"
             android:layout_toRightOf="@+id/training_counter"
-            android:text="歩"
+            android:text="回"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="40sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/training_titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/training_counterLayout">
+
+        <TextView
+            android:id="@+id/training_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="運動名"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="60sp"/>
     </RelativeLayout>
 
     <FrameLayout

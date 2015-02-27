@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -162,5 +163,13 @@ public class TrainingSelectActivity extends Activity implements View.OnClickList
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ListView list = (ListView) parent;
+        ListViewData data = (ListViewData) list.getItemAtPosition(position);
+        Log.d("TrainingSelectActivity", "title : " + data.getTitle() + ", path : " + data.getPath());
+
+        Intent intent = new Intent(this, TrainingActivity.class);
+        intent.putExtra("title", data.getTitle());
+        intent.putExtra("path", data.getPath());
+
+        startActivity(intent);
     }
 }
