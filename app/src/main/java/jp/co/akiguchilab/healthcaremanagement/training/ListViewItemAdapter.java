@@ -46,7 +46,7 @@ public class ListViewItemAdapter extends ArrayAdapter<ListViewData> {
         loopCount++;
 
         imageView.setImageBitmap(item.getBitmap());
-        textView.setText(item.getString());
+        textView.setText(item.getTitle());
 
         return view;
     }

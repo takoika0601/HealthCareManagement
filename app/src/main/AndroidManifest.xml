@@ -41,7 +41,7 @@
         </receiver>
 
         <activity
-            android:name=".training.TrainingActivity"
+            android:name=".training.TrainingSelectActivity"
             android:label="@string/title_activity_training"
             android:screenOrientation="portrait"
             >

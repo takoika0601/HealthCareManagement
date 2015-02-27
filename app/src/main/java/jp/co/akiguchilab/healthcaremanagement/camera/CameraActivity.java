@@ -116,7 +116,7 @@ public class CameraActivity extends Activity implements View.OnClickListener {
                     Cursor cursor = Images.Media.query(contentResolver, Images.Media.EXTERNAL_CONTENT_URI, null, null, Images.ImageColumns.DATE_TAKEN + " DESC");
                     cursor.moveToFirst();
 
-                    String id = cursor.getString(cursor.getColumnIndexOrThrow(BaseColumns._ID));
+                    String id = cursor.getTitle(cursor.getColumnIndexOrThrow(BaseColumns._ID));
                     mImageUri = Uri.withAppendedPath(Images.Media.EXTERNAL_CONTENT_URI, id);
                     imageView.setImageURI(mImageUri);
                     */

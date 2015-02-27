@@ -53,7 +53,7 @@ import jp.co.akiguchilab.healthcaremanagement.http.HttpExec;
 import jp.co.akiguchilab.healthcaremanagement.service.CountBinder;
 import jp.co.akiguchilab.healthcaremanagement.service.CountReceiver;
 import jp.co.akiguchilab.healthcaremanagement.service.CountService;
-import jp.co.akiguchilab.healthcaremanagement.training.TrainingActivity;
+import jp.co.akiguchilab.healthcaremanagement.training.TrainingSelectActivity;
 import jp.co.akiguchilab.healthcaremanagement.util.ParseUserInfoFromJSON;
 
 public class MainActivity extends Activity implements View.OnClickListener {
@@ -373,7 +373,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Intent intent;
         switch (v.getId()) {
             case R.id.main_danberu:
-                intent = new Intent(this, TrainingActivity.class);
+                intent = new Intent(this, TrainingSelectActivity.class);
                 startActivity(intent);
                 break;
             case R.id.main_calendar:

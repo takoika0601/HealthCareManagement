@@ -1,76 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                tools:context=".MainActivity"
-                android:background="@drawable/genetic_wall">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/kabe"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/training_centerInParentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal"></LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true">
-
-        <ImageButton
-            android:id="@+id/clover"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:background="@drawable/clover"
-            android:scaleType="fitCenter"/>
-
-        <ImageButton
-            android:id="@+id/apple"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/apple"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/apple"
-            android:scaleType="fitCenter"/>
-
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="補強運動"
-            android:textSize="45sp"
-            android:gravity="center"
-            android:layout_toRightOf="@id/clover"
-            android:layout_toLeftOf="@id/apple"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true">
-
-        <ImageButton
-            android:id="@+id/dog"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:background="@drawable/dog"/>
-
-        <ImageButton
-            android:id="@+id/bard"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/bard"/>
-    </RelativeLayout>
-
-    <ListView
-        android:id="@+id/listView"
+        android:id="@+id/training_counterLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/relativeLayout1"
-        android:layout_above="@id/relativeLayout2">
-    </ListView>
+        android:layout_above="@id/training_centerInParentLayout"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:id="@+id/training_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="60sp"/>
+
+        <TextView
+            android:id="@+id/training_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/training_counter"
+            android:layout_toRightOf="@+id/training_counter"
+            android:text="歩"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="40sp"/>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/training_centerInParentLayout"
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:id="@+id/training_walkman"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/walkman"
+            android:contentDescription="歩行者画像"/>
+
+        <ImageView
+            android:id="@+id/training_imageView"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="right|top"
+            android:adjustViewBounds="true"
+            android:background="@drawable/goal"/>
+    </FrameLayout>
 
 </RelativeLayout>

@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -184,6 +185,8 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
 
             out.close();
             bw.close();
+
+            Log.d("GA.java", name + ",assets,danberu.png," + path);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -232,7 +235,7 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
             bw.flush();
             bw.close();
 
-            filePath = GA.start(accelerometer, getIntent().getIntExtra("linage", 0));
+            filepath = GA.start(accelerometer, getIntent().getIntExtra("linage", 0));
         } catch (IOException e) {
             e.printStackTrace();
         }
