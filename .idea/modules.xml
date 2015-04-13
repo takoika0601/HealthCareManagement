@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HealthCareManagement.iml" filepath="$PROJECT_DIR$/HealthCareManagement.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ProgressWheel/ProgressWheel.iml" filepath="$PROJECT_DIR$/ProgressWheel/ProgressWheel.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/commons-lang3-3.3.2/commons-lang3-3.3.2.iml" filepath="$PROJECT_DIR$/commons-lang3-3.3.2/commons-lang3-3.3.2.iml" />
       <module fileurl="file://$PROJECT_DIR$/httpcore-4.3.2/httpcore-4.3.2.iml" filepath="$PROJECT_DIR$/httpcore-4.3.2/httpcore-4.3.2.iml" />

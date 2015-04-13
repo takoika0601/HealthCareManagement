@@ -1,0 +1,3 @@
+[submodule "ProgressWheel"]
+	path = ProgressWheel
+	url = git@github.com:Todd-Davies/ProgressWheel.git

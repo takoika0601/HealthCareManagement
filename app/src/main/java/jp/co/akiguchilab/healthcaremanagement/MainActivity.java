@@ -1,6 +1,5 @@
 package jp.co.akiguchilab.healthcaremanagement;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AlertDialog;
@@ -19,19 +18,23 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.todddavies.components.progressbar.ProgressWheel;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -56,8 +59,8 @@ import jp.co.akiguchilab.healthcaremanagement.service.CountService;
 import jp.co.akiguchilab.healthcaremanagement.training.TrainingSelectActivity;
 import jp.co.akiguchilab.healthcaremanagement.util.ParseUserInfoFromJSON;
 
-public class MainActivity extends Activity implements View.OnClickListener {
-    //private String TAG = getPackageName().getClass().getSimpleName();
+public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+    private String TAG = getPackageName().getClass().getSimpleName();
 
     boolean inService = false;
     boolean isAuth = false;
@@ -194,15 +197,60 @@ public class MainActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 画面上部のタイトルバーを表示しない
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+
+        ProgressWheel progressWheel = (ProgressWheel) findViewById(R.id.main_spinner);
+        progressWheel.spin();
+
+        LinearLayout cardLinear = (LinearLayout) findViewById(R.id.cardLinear);
+        cardLinear.removeAllViews();
+
+        String[] texts = {"補強運動", "カレンダー", "カメラ"};
+        int[] images = {R.id.main_danberu, R.id.main_calendar, R.id.main_camera};
+
+        for (int i = 0; i < 3; i++) {
+            LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+            LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.card_item, null);
+
+            CardView cardView = (CardView) layout.findViewById(R.id.cardview);
+            ImageView imageView = (ImageView) layout.findViewById(R.id.cardImage);
+            TextView textView = (TextView) layout.findViewById(R.id.cardText);
+
+            imageView.setImageResource(R.drawable.danberu);
+            textView.setText(texts[i]);
+            cardView.setTag(i);
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent;
+                    switch ((int)v.getTag()) {
+                        case 0:
+                            intent = new Intent(getApplicationContext(), TrainingSelectActivity.class);
+                            startActivity(intent);
+                            break;
+
+                        case 1:
+                            intent = new Intent(getApplicationContext(), CalendarActivity.class);
+                            startActivity(intent);
+                            break;
+
+                        case 2:
+                            intent = new Intent(getApplicationContext(), CameraActivity.class);
+                            startActivity(intent);
+                            break;
+                    }
+                }
+            });
+            cardLinear.addView(layout, i);
+        }
+        //toolbar.setNavigationIcon(R.attr.navigationIcon);
 
         ImageButton exasize = (ImageButton) findViewById(R.id.main_danberu);
         ImageButton calendar = (ImageButton) findViewById(R.id.main_calendar);
         ImageButton camera = (ImageButton) findViewById(R.id.main_camera);
-        ImageView walkman = (ImageView) findViewById(R.id.walkman);
 
         exasize.setOnClickListener(this);
         calendar.setOnClickListener(this);
