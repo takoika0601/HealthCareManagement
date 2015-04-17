@@ -19,6 +19,7 @@ import jp.co.akiguchilab.healthcaremanagement.R;
 
 /**
  * Created by i09324 on 2015/02/27.
+ * 補強運動計測アクティビティ
  */
 public class TrainingActivity extends Activity implements SensorEventListener{
     private SensorManager manager;
