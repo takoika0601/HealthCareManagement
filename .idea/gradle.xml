@@ -11,7 +11,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/calendarView" />
             <option value="$PROJECT_DIR$/commons-lang3-3.3.2" />
             <option value="$PROJECT_DIR$/httpcore-4.3.2" />
             <option value="$PROJECT_DIR$/httpmime-4.3.3" />

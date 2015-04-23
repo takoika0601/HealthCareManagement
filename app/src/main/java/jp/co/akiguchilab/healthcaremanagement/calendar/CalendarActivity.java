@@ -4,8 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.util.Calendar;
+import android.view.Window;
 
 import jp.co.akiguchilab.healthcaremanagement.R;
 
@@ -14,16 +13,10 @@ public class CalendarActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_calendar);
-
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-
-        CalendarView calendarView = (CalendarView) findViewById(R.id.Calendar);
-        calendarView.set(year, month);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

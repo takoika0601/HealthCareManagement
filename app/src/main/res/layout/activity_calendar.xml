@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<jp.co.akiguchilab.healthcaremanagement.calendar.view.MotionableScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:soundEffectsEnabled="true">
+    android:id="@+id/ScrollView01"
+    android:soundEffectsEnabled="true"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    android:fillViewport="true">
+    <LinearLayout
+        android:id="@+id/LinearLayout03"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        >
 
-    <jp.co.akiguchilab.healthcaremanagement.calendar.CalendarView
-        android:id="@+id/Calendar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal">
-    </jp.co.akiguchilab.healthcaremanagement.calendar.CalendarView>
-</LinearLayout>
+        <jp.co.akiguchilab.healthcaremanagement.calendar.view.calendar.CalendarView
+            android:id="@+id/Calendar"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:layout_weight="1">
+        </jp.co.akiguchilab.healthcaremanagement.calendar.view.calendar.CalendarView>
+        <TextView
+            android:id="@+id/txtGuidance"
+            android:layout_width="fill_parent"
+            android:text="@string/guidance_calendar_view"
+            android:layout_height="fill_parent"
+            android:layout_weight="10">
+        </TextView>
+    </LinearLayout>
+</jp.co.akiguchilab.healthcaremanagement.calendar.view.MotionableScrollView>
