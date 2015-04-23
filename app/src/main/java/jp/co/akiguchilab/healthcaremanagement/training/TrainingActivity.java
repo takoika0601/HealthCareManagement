@@ -6,6 +6,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -21,7 +22,7 @@ import jp.co.akiguchilab.healthcaremanagement.R;
  * Created by i09324 on 2015/02/27.
  * 補強運動計測アクティビティ
  */
-public class TrainingActivity extends Activity implements SensorEventListener{
+public class TrainingActivity extends Activity implements SensorEventListener {
     private SensorManager manager;
 
     private String filepath = "";
@@ -139,6 +140,10 @@ public class TrainingActivity extends Activity implements SensorEventListener{
                 count++;
                 countView.setText(count + "");
 
+                Log.d("ResetCounted", "Counted Clear!");
+                x_flag = false;
+                y_flag = false;
+                z_flag = false;
                 x_counted = false;
                 y_counted = false;
                 z_counted = false;

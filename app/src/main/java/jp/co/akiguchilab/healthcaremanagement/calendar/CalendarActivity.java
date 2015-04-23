@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.Calendar;
+
 import jp.co.akiguchilab.healthcaremanagement.R;
 
 public class CalendarActivity extends Activity {
@@ -14,8 +16,12 @@ public class CalendarActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
 
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+
         CalendarView calendarView = (CalendarView) findViewById(R.id.Calendar);
-        calendarView.set(2014, 10 - 1);
+        calendarView.set(year, month);
     }
 
 

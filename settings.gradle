@@ -1,1 +1,2 @@
 include ':app', ':commons-lang3-3.3.2', ':httpcore-4.3.2', ':httpmime-4.3.3'
+include ':calendarView'

@@ -31,4 +31,5 @@ dependencies {
     compile project(':commons-lang3-3.3.2')
     compile project(':httpcore-4.3.2')
     compile project(':httpmime-4.3.3')
+    compile project(':calendarView')
 }

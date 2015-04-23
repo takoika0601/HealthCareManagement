@@ -390,33 +390,6 @@ public class GeneticAlgorithm {
             bw.write("z," + datas.get(0).getThresholdZ_max() + "," + datas.get(0).getThresholdZ_min() + "," + datas.get(0).getZ_ActivityCount());
             bw.newLine();
 
-            boolean x_flag = false, y_flag = false, z_flag = false;
-            for (int i = 0; i < datas.size(); i++) {
-                if (datas.get(0).getThresholdX_min() >= data.get(i).getAccelerometer_x()) {
-                    bw.write("x_min,");
-                    x_flag = true;
-                }
-                if (x_flag && datas.get(0).getThresholdX_max() <= data.get(i).getAccelerometer_x()) {
-                    bw.write("x_max,");
-                }
-
-                if (datas.get(0).getThresholdY_min() >= data.get(i).getAccelerometer_y()) {
-                    bw.write("y_min,");
-                    y_flag = true;
-                }
-                if (y_flag && datas.get(0).getThresholdY_max() <= data.get(i).getAccelerometer_y()) {
-                    bw.write("y_max");
-                }
-
-                if (datas.get(0).getThresholdZ_min() >= data.get(i).getAccelerometer_z()) {
-                    bw.write("z_min,");
-                    z_flag = true;
-                }
-                if (z_flag && datas.get(0).getThresholdZ_max() <= data.get(i).getAccelerometer_z()) {
-                    bw.write("z_max,");
-                }
-            }
-
             bw.flush();
             bw.close();
         } catch (FileNotFoundException e) {
