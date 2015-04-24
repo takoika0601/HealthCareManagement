@@ -28,6 +28,7 @@ import android.view.ViewConfiguration;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -43,7 +44,6 @@ import jp.co.akiguchilab.healthcaremanagement.R;
 import jp.co.akiguchilab.healthcaremanagement.calendar.util.AnimationHelper;
 import jp.co.akiguchilab.healthcaremanagement.calendar.util.StrUtil;
 import jp.co.akiguchilab.healthcaremanagement.calendar.view.FixableViewFlipper;
-import jp.co.akiguchilab.healthcaremanagement.calendar.view.numberpicker.NumberPicker;
 
 /**
  * カレンダービューを提供します
@@ -391,15 +391,17 @@ public class CalendarView extends LinearLayout {
             boolean showNext = ( direction == DIRECTION_VERTICAL ) 
                 ? ( currentY < lastTouchY )
                 : ( currentX < lastTouchX ) ;
-            
-            //カレンダー加減算
-            calendar.add(Calendar.MONTH, showNext ? 1 : -1);
-            
-            //適切な月に移動
-            if ( showNext ) {
-                showNextMonth(direction);
-            } else {
-                showPreviousMonth(direction);
+
+            if (direction == DIRECTION_HORIZONTAL) {
+                //カレンダー加減算
+                calendar.add(Calendar.MONTH, showNext ? 1 : -1);
+
+                //適切な月に移動
+                if (showNext) {
+                    showNextMonth(direction);
+                } else {
+                    showPreviousMonth(direction);
+                }
             }
         }
         return true;
@@ -487,12 +489,26 @@ public class CalendarView extends LinearLayout {
         final int currentYear = cView.getCalendar().get(Calendar.YEAR);
         final int currentMonth = cView.getCalendar().get(Calendar.MONTH)+1;//月は0オリジン
 
-        yearPicker.setRange(currentYear-1, currentYear+1);
-        yearPicker.setSpeed(100);
-        yearPicker.setCurrent(currentYear);
+        yearPicker.setMinValue(currentYear - 100);
+        yearPicker.setMaxValue(currentYear + 100);
+        yearPicker.setValue(currentYear);
+        yearPicker.setFormatter(new NumberPicker.Formatter() {
+            @Override
+            public String format(int i) {
+                return String.format("%04d", i);
+            }
+        });
 
-        
-        monthPicker.setFormatter(NumberPicker.TWO_DIGIT_FORMATTER);
+        monthPicker.setMinValue(1);
+        monthPicker.setMaxValue(12);
+        monthPicker.setValue(currentMonth);
+        monthPicker.setFormatter(new NumberPicker.Formatter() {
+            @Override
+            public String format(int i) {
+                return String.format("%02d", i);
+            }
+        });
+
         DateFormatSymbols dfs = new DateFormatSymbols();
         String[] months = new String[12];
         System.arraycopy(dfs.getShortMonths(), 0, months, 0, 12);
@@ -503,10 +519,6 @@ public class CalendarView extends LinearLayout {
             }
         }
         */
-        monthPicker.setRange(1, 12, null);
-        monthPicker.setSpeed(200);
-        monthPicker.setCurrent(currentMonth);
-        
         
         AlertDialog.Builder builder = 
             new AlertDialog.Builder(this.getContext());
@@ -517,8 +529,8 @@ public class CalendarView extends LinearLayout {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     //入力された年月をビューに設定
-                    int setYear = yearPicker.getCurrent();
-                    int setMonth = monthPicker.getCurrent(); 
+                    int setYear = yearPicker.getValue();
+                    int setMonth = monthPicker.getValue();
                     
                     if ( currentYear != setYear || currentMonth != setMonth ) {
                         showYearMonth(setYear, setMonth);
