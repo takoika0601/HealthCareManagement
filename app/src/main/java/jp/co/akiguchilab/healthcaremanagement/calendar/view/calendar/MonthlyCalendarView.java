@@ -455,7 +455,6 @@ public class MonthlyCalendarView extends View {
         this.invalidate();
     }
 
-    
     float lastTouchX;
     float lastTouchY;
     

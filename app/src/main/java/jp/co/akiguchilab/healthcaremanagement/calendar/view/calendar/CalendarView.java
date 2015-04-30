@@ -19,6 +19,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -414,7 +415,7 @@ public class CalendarView extends LinearLayout {
         DateInfo dateInfo = currentView.getSelectedDateInfo();
         
         if ( dateInfo != null ) {
-            //Log.d(TAG, "onCalendarSelection: dateInfo=" + dateInfo );
+            Log.d(TAG, "onCalendarSelection: dateInfo=" + dateInfo);
             int size = this.listenerList.size();
             if ( size > 0 ) {
                 for (int i = size-1; i >= 0; i--) {
