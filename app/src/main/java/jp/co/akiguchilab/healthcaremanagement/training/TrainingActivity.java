@@ -6,6 +6,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Window;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import jp.co.akiguchilab.healthcaremanagement.R;
  */
 public class TrainingActivity extends Activity implements SensorEventListener {
     private SensorManager manager;
+    private Vibrator vibrator;
 
     private String filepath = "";
     private float threshold_x_min = 0;
@@ -42,6 +44,7 @@ public class TrainingActivity extends Activity implements SensorEventListener {
 
     private TextView countView;
     private int count;
+    private boolean onPractice = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,21 +54,39 @@ public class TrainingActivity extends Activity implements SensorEventListener {
         setContentView(R.layout.activity_training);
 
         manager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
         TextView titleView = (TextView) findViewById(R.id.training_title);
         countView = (TextView) findViewById(R.id.training_counter);
+
+        // 運動名の取得
         titleView.setText(getIntent().getExtras().getString("title", "エラー"));
 
+        // 運動の閾値ファイルのパスを取得
         filepath = getIntent().getExtras().getString("path", "");
-        readThreshold(filepath);
 
+        // 練習モードか？
+        onPractice = getIntent().getExtras().getBoolean("onPractice");
+
+        // ファイルから閾値を読み込み
+        readThreshold(filepath);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         countTraining();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        manager.unregisterListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //manager.unregisterListener(this);
     }
 
     public void readThreshold(String path) {
@@ -137,16 +158,27 @@ public class TrainingActivity extends Activity implements SensorEventListener {
             }
 
             if (x_counted && y_counted && z_counted) {
+                // 10ミリ秒バイブレーション
+                vibrator.vibrate(10);
+
+                // 1回カウント
                 count++;
                 countView.setText(count + "");
 
                 Log.d("ResetCounted", "Counted Clear!");
+                // フラグのリセット
                 x_flag = false;
                 y_flag = false;
                 z_flag = false;
                 x_counted = false;
                 y_counted = false;
                 z_counted = false;
+            }
+
+            // TODO: 練習モード時は計測を保存しない
+            if (!onPractice) {
+                // TODO: 計測回数の保存処理
+
             }
         }
     }

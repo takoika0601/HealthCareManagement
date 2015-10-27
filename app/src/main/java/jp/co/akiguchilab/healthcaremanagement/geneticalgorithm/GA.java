@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.List;
 
 import jp.co.akiguchilab.healthcaremanagement.R;
+import jp.co.akiguchilab.healthcaremanagement.training.TrainingActivity;
 
 /**
  * Created by i09324 on 2014/08/28.
@@ -50,6 +51,7 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
     private boolean SENSOR_ON_FLAG = false;
 
     private String filepath = "";
+    private String name = "";
     private ArrayList<AccelerometerData> accelerometer = new ArrayList<AccelerometerData>();
     private Thread thread;
     private SensorManager manager;
@@ -89,6 +91,7 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
         Button OnOff = (Button) findViewById(R.id.genetic_run_button);
 
         switch (v.getId()) {
+            // 実行ボタンが押された際の挙動
             case R.id.genetic_run_button:
                 if (!SENSOR_ON_FLAG) {
                     enableSensor();
@@ -102,10 +105,18 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
                 }
                 break;
 
+            // 練習ボタンが押された際の挙動
             case R.id.genetic_practice_button:
                 //TODO
+                Intent intent = new Intent(this, TrainingActivity.class);
+                intent.putExtra("title", name);
+                intent.putExtra("path", filepath);
+                intent.putExtra("onPractice", true);
+
+                startActivity(intent);
                 break;
 
+            // 登録ボタンが押された際の挙動
             case R.id.genetic_complete_button:
                 DialogFragment dialog = new confirmDialog();
                 dialog.show(getFragmentManager(), "dialog");
@@ -157,8 +168,8 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
                     .setPositiveButton("登録", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            String str = text.getText().toString();
-                            addTraining(str, filepath);
+                            name = text.getText().toString();
+                            addTraining(name, filepath);
 
                             setResult(RESULT_OK, new Intent());
                             finish();
@@ -174,19 +185,19 @@ public class GA extends Activity implements SensorEventListener, OnClickListener
     }
 
     // 運動をcsvファイルに書き込み、追加する
-    private void addTraining(String name, String path) {
+    private void addTraining(String Trainingname, String path) {
         try {
             OutputStream out = openFileOutput("Training.csv", MODE_APPEND);
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
 
+            bw.write(Trainingname + ",assets,danberu.png," + path);
             bw.newLine();
-            bw.write(name + ",assets,danberu.png," + path);
             bw.flush();
 
             out.close();
             bw.close();
 
-            Log.d("GA.java", name + ",assets,danberu.png," + path);
+            Log.d("GA.java", Trainingname + ",assets,danberu.png," + path);
         } catch (Exception e) {
             e.printStackTrace();
         }

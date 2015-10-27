@@ -20,7 +20,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -357,6 +356,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
 
                 bw.write("ダンベル,assets,danberu.png,dum.csv" + filepath);
+                bw.newLine();
                 bw.flush();
                 bw.close();
             } catch (Exception e) {
