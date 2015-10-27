@@ -14,4 +14,5 @@
     <color name="calendar_holiday">#ffFF0000</color>
     <color name="calendar_saturday">#ff0000FF</color>
     <color name="shadowColor">#BB000000</color>
+    <color name="cardview_initial_background">#71C3DE</color>
 </resources>

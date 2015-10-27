@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:soundEffectsEnabled="true">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
 
-    <jp.co.akiguchilab.healthcaremanagement.calendar.CalendarView
-        android:id="@+id/Calendar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal">
-    </jp.co.akiguchilab.healthcaremanagement.calendar.CalendarView>
-</LinearLayout>
+
+</RelativeLayout>

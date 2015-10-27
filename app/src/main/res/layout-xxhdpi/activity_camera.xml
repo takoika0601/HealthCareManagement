@@ -20,11 +20,11 @@
 
     <TextView
         android:id="@+id/camera_subtext"
-        android:layout_width="match_parent"
+        android:layout_width="360dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/camera_text"
-        android:text="運動中の様子や風景などを\n自由に撮ろう！"
+        android:text="運動中の様子や風景など\n自由に撮ろう！"
         android:textSize="28dp"
         android:gravity="center"/>
 

@@ -10,10 +10,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,37 +30,38 @@ public class CameraActivity extends Activity implements View.OnClickListener {
     private static final int MEDIA_TYPE_IMAGE = 100;
     private static final int IMAGE_CAPTURE = 50;
     private static final int REQUEST_GALLARY = 60;
+    private static final int RESULT_PICK_IMAGEFILE = 1001;
     private static final String KEY_IMAGE_URI = "KEY";
 
     private Uri mImageUri;
     private SharedPreferences sharedPreferences;
-    private static ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera);
 
-        imageView = (ImageView) findViewById(R.id.camera_image);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_camera);
 
         Button breakfast = (Button) findViewById(R.id.camera_breakfast_button);
         Button lunch = (Button) findViewById(R.id.camera_lunch_button);
-        Button dinner = (Button) findViewById(R.id.camera_dinner_button);
 
         breakfast.setOnClickListener(this);
         lunch.setOnClickListener(this);
-        dinner.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
+        onCreateTodayFolder();
+
         Intent intent = new Intent();
 
         switch (view.getId()) {
             case R.id.camera_breakfast_button:
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                startActivityForResult(intent, REQUEST_GALLARY);
+                intent.setAction(Intent.ACTION_PICK);
+                //intent.setType("image/*");
+                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, RESULT_PICK_IMAGEFILE);
                 break;
 
             case R.id.camera_lunch_button:
@@ -93,7 +95,7 @@ public class CameraActivity extends Activity implements View.OnClickListener {
                     try {
                         getContentResolver().delete(tmpUri, null, null);
                     } catch (Exception e) {
-                        Log.d(TAG, "FEEEEEE");
+                        Log.d(TAG, "Error");
                     }
                     sharedPreferences.edit().remove("mImageUri");
                 }
@@ -123,7 +125,7 @@ public class CameraActivity extends Activity implements View.OnClickListener {
                 }
 
                 mImageUri = resultUri;
-                imageView.setImageURI(mImageUri);
+                //imageView.setImageURI(mImageUri);
             } else if (resultCode == RESULT_CANCELED) {
                 Log.d(TAG, "RESULT CANCELLED. Back to the CameraActivity");
             } else {
@@ -134,7 +136,18 @@ public class CameraActivity extends Activity implements View.OnClickListener {
                 InputStream in = getContentResolver().openInputStream(data.getData());
                 Bitmap img = BitmapFactory.decodeStream(in);
 
-                imageView.setImageBitmap(img);
+                //imageView.setImageBitmap(img);
+            } catch (FileNotFoundException e) {
+                Log.d(TAG, "foooo");
+            } catch (NullPointerException e) {
+                Log.d(TAG, "No Select");
+            }
+        } else if (requestCode == RESULT_PICK_IMAGEFILE) {
+            try {
+                InputStream in = getContentResolver().openInputStream(data.getData());
+                Bitmap img = BitmapFactory.decodeStream(in);
+
+                //imageView.setImageBitmap(img);
             } catch (FileNotFoundException e) {
                 Log.d(TAG, "foooo");
             } catch (NullPointerException e) {
@@ -155,7 +168,7 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         super.onRestoreInstanceState(savedInstanceState);
         Log.d(TAG, "onRestoreInstanceState");
         mImageUri = (Uri) savedInstanceState.get(KEY_IMAGE_URI);
-        imageView.setImageURI(mImageUri);
+        //imageView.setImageURI(mImageUri);
     }
 
     private static Uri getOutputMediaFileUri(int type) {
@@ -190,6 +203,22 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         }
 
         return mediaFile;
+    }
+
+    private void onCreateTodayFolder() {
+        // 現在時刻の取得
+        Time nowTime = new Time("Asia/Tokyo");
+        nowTime.setToNow();
+        String folderName = nowTime.year + "-" + nowTime.month + "-" + nowTime.monthDay;
+
+        // フォルパスの整形
+        File directory = Environment.getExternalStorageDirectory();
+        File folder = new File(directory.getAbsolutePath() + File.pathSeparator + "HealthCare" + File.pathSeparator + folderName);
+
+        if (!folder.exists()) {
+            // フォルダが存在するか
+            folder.mkdir();
+        }
     }
 
     @Override

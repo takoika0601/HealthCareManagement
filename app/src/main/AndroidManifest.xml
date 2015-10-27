@@ -61,6 +61,10 @@
             android:name=".calendar.CalendarActivity"
             android:label="@string/title_activity_calendar"
             android:screenOrientation="portrait" />
+
+        <provider
+            android:name="com.example.calendarview.CalendarProvider"
+            android:authorities="com.example.calendarview.calendarprovider" />
     </application>
 
 </manifest>

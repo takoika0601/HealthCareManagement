@@ -17,8 +17,13 @@ import android.widget.ListView;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -29,6 +34,7 @@ public class TrainingSelectActivity extends Activity implements View.OnClickList
     private int flag = 0;
     private int linage = 0;
     private ListView mListView;
+    private ArrayList<ListViewData> objects = new ArrayList<ListViewData>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +56,7 @@ public class TrainingSelectActivity extends Activity implements View.OnClickList
 
     // 補強運動の読み込み
     private void readTraining() {
-        ArrayList<ListViewData> objects = new ArrayList<ListViewData>();
-
+        objects = new ArrayList<ListViewData>();
         // ファイルから読み込む
         // 運動名,(assets,)アイコンファイルパス,閾値ファイルパス
         try {
@@ -132,7 +137,6 @@ public class TrainingSelectActivity extends Activity implements View.OnClickList
     }
 
 
-
     @Override
     public boolean onContextItemSelected(MenuItem item) {
 
@@ -153,6 +157,7 @@ public class TrainingSelectActivity extends Activity implements View.OnClickList
         ListViewItemAdapter adapter = (ListViewItemAdapter) mListView.getAdapter();
 
         if (item.getItemId() == R.id.DeleteListItem) {
+            removeActivity(data);
             adapter.remove(data);
         }
         adapter.notifyDataSetChanged();
@@ -169,7 +174,73 @@ public class TrainingSelectActivity extends Activity implements View.OnClickList
         Intent intent = new Intent(this, TrainingActivity.class);
         intent.putExtra("title", data.getTitle());
         intent.putExtra("path", data.getPath());
+        intent.putExtra("onPractice", false);
 
         startActivity(intent);
+    }
+
+    public void removeActivity(ListViewData data) {
+        try {
+            InputStream in = openFileInput("Training.csv");
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+
+            OutputStream out = openFileOutput("CopyTraining.csv", MODE_APPEND);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
+
+            String line = "";
+            String name = "";
+            String assets = "";
+            String threshold = "";
+
+            while ((line = br.readLine()) != null) {
+                linage++;
+
+                StringTokenizer st = new StringTokenizer(line, ",");
+
+                // 運動名の読み込み
+                name = st.nextToken();
+                // アイコンの読み込み
+                assets = st.nextToken();
+                // 閾値の読み込み
+                threshold = st.nextToken();
+
+                if (!name.equals(data.getTitle())) {
+                    bw.write(name + ",assets,danberu.png," + threshold);
+                    bw.newLine();
+                }
+            }
+            bw.flush();
+
+            in.close();
+            br.close();
+            out.close();
+            bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        deleteFile("Training.csv");
+
+        try {
+            InputStream in = openFileInput("CopyTraining.csv");
+            OutputStream out = openFileOutput("Training.csv", MODE_PRIVATE);
+
+            int DEFAULT_BUFFER_SIZE = 1024 * 4;
+            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+            int size = -1;
+
+            while (-1 != (size = in.read(buffer))) {
+                out.write(buffer, 0, size);
+            }
+
+            in.close();
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        deleteFile("CopyTraining.csv");
     }
 }
