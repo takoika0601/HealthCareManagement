@@ -20,11 +20,11 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
-import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -39,25 +39,32 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
+import jp.co.akiguchilab.healthcaremanagement.calendar.CalendarActivity;
+import jp.co.akiguchilab.healthcaremanagement.camera.CameraActivity;
 import jp.co.akiguchilab.healthcaremanagement.http.HttpExec;
 import jp.co.akiguchilab.healthcaremanagement.service.CountBinder;
 import jp.co.akiguchilab.healthcaremanagement.service.CountReceiver;
 import jp.co.akiguchilab.healthcaremanagement.service.CountService;
-import jp.co.akiguchilab.healthcaremanagement.training.TrainingActivity;
+import jp.co.akiguchilab.healthcaremanagement.training.TrainingSelectActivity;
 import jp.co.akiguchilab.healthcaremanagement.util.ParseUserInfoFromJSON;
 
 public class MainActivity extends Activity implements View.OnClickListener {
+    //private String TAG = getPackageName().getClass().getSimpleName();
 
     boolean inService = false;
     boolean isAuth = false;
 
     private final int MP = ViewGroup.LayoutParams.MATCH_PARENT;
+
+    private static final int MENU_A = 0;
+    private static final int MENU_B = 1;
 
     class Whoami {
         int id;
@@ -98,11 +105,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
 
         public String infoString() {
-            String[] info = new String[] {
+            String[] info = new String[]{
                     String.format("number:name = %s:%s", this.number, this.name),
                     String.format("start at %s", DateFormat.format("yyyy-MM-dd(E) kk:mm:ss", this.authAt).toString()),
-                    String.format("collection time range %02d:00 - %02d:00",this.pHour,this.pHour+this.pLong),
-                    String.format("use Vibrator on update = %s",this.useVib),
+                    String.format("collection time range %02d:00 - %02d:00", this.pHour, this.pHour + this.pLong),
+                    String.format("use Vibrator on update = %s", this.useVib),
             };
             return StringUtils.join(info, "\n");
         }
@@ -145,18 +152,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         return retValue;
     }
 
-    // SE再生用
-    private SoundPool mSoundPool;
-    private int mSoundId;
-
-    // 画面更新
-    ViewRefresh thread;
-
-    private CountService countService;
-    private final CountReceiver receiver = new CountReceiver();
-    private HttpExec httpExec = null;
-    private HttpExec.callBack atAfterAuth = null;
-
     private ServiceConnection serviceConnection = new ServiceConnection() {
         // サービスが接続されたときに呼び出される
         @Override
@@ -171,6 +166,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
             countService = null;
         }
     };
+
+    // SE再生用
+    private SoundPool mSoundPool;
+    private int mSoundId;
+
+    // 画面更新
+    ViewRefresh thread;
+
+    private CountService countService;
+    private final CountReceiver receiver = new CountReceiver();
+    private HttpExec httpExec = null;
+    private HttpExec.callBack atAfterAuth = null;
 
     // SDカードの有無判定
     String status = Environment.getExternalStorageState();
@@ -191,16 +198,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         setContentView(R.layout.activity_main);
 
-        Button start = (Button) findViewById(R.id.button1);
-        Button stop = (Button) findViewById(R.id.button2);
-        ImageButton exasize = (ImageButton) findViewById(R.id.imageButton1);
-        //   ImageButton weight = (ImageButton) findViewById(R.id.imageButton2);
+        ImageButton exasize = (ImageButton) findViewById(R.id.main_danberu);
+        ImageButton calendar = (ImageButton) findViewById(R.id.main_calendar);
+        ImageButton camera = (ImageButton) findViewById(R.id.main_camera);
         ImageView walkman = (ImageView) findViewById(R.id.walkman);
 
-        start.setOnClickListener(this);
-        stop.setOnClickListener(this);
         exasize.setOnClickListener(this);
-        //    weight.setOnClickListener(this);
+        calendar.setOnClickListener(this);
+        camera.setOnClickListener(this);
 
         context = this;
         whoami = new Whoami();
@@ -210,8 +215,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         isAuth = false;
 
         // 初期状態におけるボタンの表示状態の設定
-        start.setVisibility(View.VISIBLE);
-        stop.setVisibility(View.INVISIBLE);
         //    weight.setVisibility(View.INVISIBLE);
 
         atAfterAuth = new HttpExec.callBack() {
@@ -222,7 +225,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void run() {
                         if (success) {
-                            if (text.equals("") == false) {
+                            if (!text.equals("")) {
                                 if (mrJSON.Get(text)) {
                                     Editor editor = thisPref.edit();
                                     editor.putString("JSON", text);
@@ -235,7 +238,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                                             mrJSON.number, mrJSON.pHour, mrJSON.pLong, v, new Date(), c);
                                     isAuth = true;
                                     /*
-									 * Intent start = new Intent();
+                                     * Intent start = new Intent();
 									 * start.setClass(getApplicationContext(),
 									 * thisService); start.putExtra("whoami",
 									 * whoami.id); // notice!
@@ -245,8 +248,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 									 * whoami.pLong); start.putExtra("vibrator",
 									 * whoami.useVib);
 									 */
-                                    findViewById(R.id.button1).setVisibility(View.INVISIBLE);
-                                    findViewById(R.id.button2).setVisibility(View.VISIBLE);
 
                                     if (inService == false) {
                                         serviceController(true);
@@ -280,19 +281,37 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         mrJSON = new ParseUserInfoFromJSON();
 
-        if (isSdCardMounted() == true) {
+        // 初回起動時の処理
+        if (!thisPref.getBoolean("Launched", false)) {
+            startUp();
+
+            Editor editor = thisPref.edit();
+            editor.putBoolean("Launched", true);
+            editor.apply();
+        }
+
+        // View decor = this.getWindow().getDecorView();
+        // decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+        // View.SYSTEM_UI_FLAG_FULLSCREEN );
+        // getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    private void startUp() {
+        //Log.d(TAG, "start_up");
+
+        if (isSdCardMounted()) {
             File directory = Environment.getExternalStorageDirectory();
             //sdcardに書き込めるかどうか
             if (directory.exists()) {
                 if (directory.canWrite()) {
                     //書き込める場合、フォルダを作成
-                    File file = new File(directory.getAbsolutePath() + getString(R.string.app_name));
+                    File file = new File(directory.getAbsolutePath() + "/" + "HealthCare");
                     file.mkdir();
                 }
             }
 
             //補強運動において使用される閾値などを格納するファイルdum.csvを作成する
-            String filepath = directory.getAbsolutePath() + getString(R.string.app_name) + "/dum.csv";
+            String filepath = directory.getAbsolutePath() + "/HealthCare" + "/dum.csv";
             File filecheck = new File(filepath);
             try {
                 //ファイルが存在するかどうか
@@ -303,20 +322,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     );
                     int filevalue = 0;
                     //filevalue : 使用する軸の設定
-                    bw.write(filevalue);
+                    bw.write("0");
                     bw.newLine();
                     double valueXmin = -1.0;
                     double valueXmax = -0.4;
-                    //valueXmin, valueXmax : x軸の最小、最大値の設定
-                    bw.write(valueXmin + "," + valueXmax);
-                    double valueYmin = -1.0;
-                    double valueYmax = -0.4;
-                    //valueYmin, valueYmax : y軸の最小、最大値の設定
-                    bw.write(valueYmin + "," + valueYmax);
-                    double valueZmin = -1.0;
-                    double valueZmax = -0.4;
-                    //valueZmin, valueZmax : z軸の最小、最大値の設定
-                    bw.write(valueZmin + "," + valueZmax);
+                    //valueXmax, valueXmin : x軸の最大、最小値の設定
+                    bw.write(valueXmax + "," + valueXmin);
+                    bw.newLine();
+                    double valueY = 0;
+                    //valueYmax, valueYmin : y軸の最大、最小値の設定
+                    bw.write(valueY + "," + valueY);
+                    bw.newLine();
+                    double valueZ = 0;
+                    //valueZmax, valueZmin : z軸の最大、最小値の設定
+                    bw.write(valueZ + "," + valueZ);
+                    bw.flush();
                     bw.close();
                 }
             } catch (UnsupportedEncodingException e) {
@@ -329,80 +349,49 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 // TODO Auto-generated
                 e.printStackTrace();
             }
+
+            // 補強運動リスト Training.csvの作成
+            try {
+                OutputStream out = openFileOutput("Training.csv", MODE_PRIVATE);
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+
+                bw.write("ダンベル,assets,danberu.png,dum.csv" + filepath);
+                bw.newLine();
+                bw.flush();
+                bw.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             //SDカードがない場合
+            // TODO
         }
-
-        // View decor = this.getWindow().getDecorView();
-        // decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-        // View.SYSTEM_UI_FLAG_FULLSCREEN );
-        // getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId()) {
-            case R.id.button1:
-                // 歩行検出サービス開始
-                serviceController(true);
-
-                findViewById(R.id.button1).setVisibility(View.INVISIBLE);
-                findViewById(R.id.button2).setVisibility(View.VISIBLE);
-
+            case R.id.main_danberu:
+                intent = new Intent(this, TrainingSelectActivity.class);
+                startActivity(intent);
                 break;
-
-            case R.id.button2:
-                // ダイアログを生成
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-                // 内容の設定
-                alertDialog.setMessage("今日の運動を終了して、これまでのデータを先生に送りますか？");
-                // ボタンの設定(ok)
-                alertDialog.setPositiveButton("はい",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // ボタンを押した時の処理
-                                serviceController(false);
-
-                                findViewById(R.id.button1).setVisibility(
-                                        View.VISIBLE);
-                                findViewById(R.id.button2).setVisibility(
-                                        View.INVISIBLE);
-
-                                // メール送信
-                            }
-                        }
-                );
-                // ボタンの設定(no)
-                alertDialog.setNeutralButton("いいえ",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // ボタンを押した時の処理
-                                // 画面継続
-                            }
-                        }
-                );
-                // ダイアログの作成と描画
-                alertDialog.create();
-                alertDialog.show();
-
+            case R.id.main_calendar:
+                intent = new Intent(this, CalendarActivity.class);
+                startActivity(intent);
                 break;
-            case R.id.imageButton1:
-                Intent intent = new Intent(this, TrainingActivity.class);
+            case R.id.main_camera:
+                intent = new Intent(this, CameraActivity.class);
                 startActivity(intent);
                 break;
         }
-		/*
-		 * if(v == weight){
-		 *
-		 * }
-		 */
     }
 
     private void startAuth() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        String defaultA = thisPref.getString("account", "");
-        String defaultP = thisPref.getString("password", "");
+        String defaultA = thisPref.getString("account", "i09324");
+        String defaultP = thisPref.getString("password", "i09324");
 
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
@@ -474,43 +463,45 @@ public class MainActivity extends Activity implements View.OnClickListener {
         mode.setClass(this, CountService.class);
 
         if (start) {
+            mode.putExtra("whoami", whoami.id);
+            mode.putExtra("sInterval", 5);
+            mode.putExtra("phour", whoami.pHour);
+            mode.putExtra("plong", whoami.pLong);
+            mode.putExtra("vibrator", whoami.useVib);
+
             startService(mode);
             inService = true;
+
+            Intent intent = new Intent(this, CountService.class);
 
             IntentFilter intentfilter = new IntentFilter(CountService.ACTION);
             registerReceiver(receiver, intentfilter);
 
-            // サービスをバインド
-            bindService(mode, serviceConnection, Context.BIND_AUTO_CREATE);
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-            // スレッドを作成、スタート
             thread = new ViewRefresh();
             thread.start();
-
         } else {
             stopService(mode);
             inService = false;
 
-            // スレッド終了
-            thread.close();
-            // サービスのアンバインド
             unbindService(serviceConnection);
-            // 登録解除
-            unregisterReceiver(receiver);
+            thread.close();
         }
     }
 
-/*    private void playFromSoundPool() {
-        // 音声データを再生する
-        mSoundPool.play(mSoundId, 1.0F, 1.0F, 0, 0, 1.0F);
-    }
-*/
+    /*    private void playFromSoundPool() {
+            // 音声データを再生する
+            mSoundPool.play(mSoundId, 1.0F, 1.0F, 0, 0, 1.0F);
+        }
+    */
     // 非同期の画面更新クラス
     class ViewRefresh extends Thread {
         Handler handler = new Handler();
 
         TextView counter;
         boolean runflg = true;
+        long count;
 
         public ViewRefresh() {
             counter = (TextView) findViewById(R.id.counter);
@@ -529,7 +520,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     public void run() {
                         try {
                             // 歩数を取得して表示する
-                            counter.setText("" + countService.getCounter());
+                            if ((count = countService.getCounter()) != -1) {
+                                counter.setText("" + countService.getCounter());
+                            } else {
+                                counter.setText("0");
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -544,28 +539,112 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    // Backボタンの挙動制御
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode != KeyEvent.KEYCODE_BACK) {
-            // Backボタン押下時のActivity終了を禁止する
-            return super.onKeyDown(keyCode, event);
-        } else {
-            return false;
+//    // Backボタンの挙動制御
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode != KeyEvent.KEYCODE_BACK) {
+//            // Backボタン押下時のActivity終了を禁止する
+//            return super.onKeyDown(keyCode, event);
+//        } else {
+//            return false;
+//        }
+//    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, MENU_A, 0, "歩数計の開始/停止").setIcon(android.R.drawable.ic_menu_preferences);
+        menu.add(0, MENU_B, 0, "設定").setIcon(android.R.drawable.ic_menu_preferences);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        switch (id) {
+            case MENU_A:
+                if (!inService) {
+                    if (!isAuth) {
+                        startAuth();
+                    } else {
+                        serviceController(true);
+                    }
+                } else {
+
+                    builder.setTitle("歩数計を停止してもよろしいですか？");
+                    builder.setPositiveButton("はい", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            serviceController(false);
+                            isAuth = false;
+                        }
+                    });
+
+                    builder.setNegativeButton("いいえ", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int which) {
+
+                        }
+                    });
+
+                    builder.create().show();
+                }
+                break;
+            case MENU_B:
+                if (isAuth) {
+                    final String[] chkItenms = {"バイブレーターを使用する", "カメラを使用する"};
+                    final boolean[] chkSts = {whoami.useVib, whoami.useCamera};
+
+                    builder.setTitle("サービスの設定");
+                    builder.setMultiChoiceItems(chkItenms, chkSts, new DialogInterface.OnMultiChoiceClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which, boolean flag) {
+                            switch (which) {
+                                case 0:
+                                    whoami.useVib = flag;
+                                    break;
+                                case 1:
+                                    whoami.useCamera = flag;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    });
+                    builder.setPositiveButton("はい", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Editor editor = thisPref.edit();
+                            editor.putBoolean("useVib", whoami.useVib);
+                            editor.putBoolean("useCamera", whoami.useCamera);
+                            editor.commit();
+                            serviceController(false);
+                            serviceController(true);
+                        }
+                    });
+                    builder.create().show();
+                }
+                break;
+            default:
+                break;
         }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-		/*
-		 * //音声データを読み込み mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC,
+        /*
+         * //音声データを読み込み mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC,
 		 * 0); mSoundId = mSoundPool.load(getApplicationContext(), R.raw.a, 0);
 		 */
         inService = isServiceActive(thisService);
 
-        if (inService == false) {
+        if (!inService) {
             startAuth();
-        } else if (isAuth == false) {
+        } else if (!isAuth) {
             boolean v = thisPref.getBoolean("useVib", true);
             boolean c = thisPref.getBoolean("useCamera", true);
 
@@ -575,19 +654,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
             isAuth = true;
         }
 
-        Intent intent = new Intent(this, CountService.class);
-        //startService(intent);
+        if (inService) {
+            Intent intent = new Intent(this, CountService.class);
 
-        IntentFilter intentfilter = new IntentFilter(CountService.ACTION);
-        registerReceiver(receiver, intentfilter);
+            IntentFilter intentfilter = new IntentFilter(CountService.ACTION);
+            registerReceiver(receiver, intentfilter);
 
-        // サービスをバインド
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-        // スレッドを作成、スタート
-        thread = new ViewRefresh();
-        thread.start();
-
+            thread = new ViewRefresh();
+            thread.start();
+        }
     }
 
     @Override
@@ -596,6 +673,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		/*
 		 * //音声データをリリースする mSoundPool.release();
 		 */
+
+        ViewRefresh refresh = new ViewRefresh();
+        refresh.close();
     }
 
     @Override
@@ -606,6 +686,5 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		/*
 		 * mSoundPool.release();
 		 */
-
     }
 }

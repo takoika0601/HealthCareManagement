@@ -2,9 +2,22 @@
 <resources>
 
     <string name="app_name">健康管理</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="title_activity_trainingselect">TrainingSelectActivity</string>
     <string name="title_activity_training">TrainingActivity</string>
     <string name="title_activity_setting_view">SettingViewActivity</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_calendar">CalendarActivity</string>
 
+    <string name="format_month_year">yyyy年MM月</string>
+
+    <string name="guidance_year">年</string>
+    <string name="guidance_month"> 月</string>
+    <string name="guidance_hour"> 時</string>
+    <string name="guidance_minute"> 分</string>
+    <string name="year_month_dialog_title">年月を設定します</string>
+    <string name="guidance_calendar_view"> 日付を選択してください</string>
+    <string name="button_set">設定</string>
+    <string name="button_cancel">キャンセル</string>
 </resources>

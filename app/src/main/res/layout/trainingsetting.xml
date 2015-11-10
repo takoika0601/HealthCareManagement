@@ -3,7 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/o">
+                android:background="@drawable/genetic_wall">
 
     <RelativeLayout
         android:id="@+id/relativeLayout3"
@@ -34,7 +34,7 @@
             android:layout_weight="1"
             android:text="個人設定"
             android:textSize="60sp"
-            android:background="@android:color/white" />
+            android:background="@android:color/white"/>
 
         <Button
             android:id="@+id/counter"
@@ -43,7 +43,7 @@
             android:layout_weight="1"
             android:text="目標回数"
             android:textSize="60sp"
-            android:background="@android:color/white" />
+            android:background="@android:color/white"/>
     </LinearLayout>
 
     <LinearLayout
@@ -59,7 +59,7 @@
             android:layout_height="200dp"
             android:text="新しい運動の追加"
             android:textSize="55sp"
-            android:background="@android:color/white" />
+            android:background="@android:color/white"/>
     </LinearLayout>
 
 </RelativeLayout>

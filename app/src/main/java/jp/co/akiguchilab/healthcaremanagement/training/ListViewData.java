@@ -4,7 +4,8 @@ import android.graphics.Bitmap;
 
 public class ListViewData {
     private Bitmap bitmap;
-    private String string;
+    private String title;
+    private String path;
 
     public void setBitmap(Bitmap img) {
         bitmap = img;
@@ -14,11 +15,19 @@ public class ListViewData {
         return bitmap;
     }
 
-    public void setString(String msg) {
-        string = msg;
+    public void setTitle(String msg) {
+        title = msg;
     }
 
-    public String getString() {
-        return string;
+    public String getTitle() {
+        return title;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getPath() {
+        return path;
     }
 }

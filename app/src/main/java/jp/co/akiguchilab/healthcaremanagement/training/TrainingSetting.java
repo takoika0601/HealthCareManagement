@@ -8,9 +8,9 @@ import android.view.Window;
 import android.widget.Button;
 
 import jp.co.akiguchilab.healthcaremanagement.R;
+import jp.co.akiguchilab.healthcaremanagement.geneticalgorithm.GA;
 
-public class TrainingSetting extends Activity implements View.OnClickListener{
-
+public class TrainingSetting extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,10 +38,13 @@ public class TrainingSetting extends Activity implements View.OnClickListener{
                 intent.putExtra("subtitle", "目標回数");
                 intent.putExtra("counter", "回");
                 startActivity(intent);
+                break;
             case R.id.add:
+                intent.setClass(this, GA.class);
+                intent.putExtra("linage", getIntent().getIntExtra("linage", 0));
+                startActivity(intent);
                 break;
         }
     }
-
 }
 

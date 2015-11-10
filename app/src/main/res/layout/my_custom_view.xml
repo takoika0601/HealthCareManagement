@@ -8,7 +8,7 @@
                 android:paddingRight="20dp"
                 android:background="@android:color/white">
 
-    <TextView
+    <jp.co.akiguchilab.healthcaremanagement.util.AutoshrinkTextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,15 +16,17 @@
         android:textSize="50sp"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/imageView1"
+        android:layout_toStartOf="@+id/imageView1"
+        android:singleLine="true"/>
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-
         android:src="@drawable/ic_launcher"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"/>

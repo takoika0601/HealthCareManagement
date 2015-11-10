@@ -1,126 +1,190 @@
 package jp.co.akiguchilab.healthcaremanagement.training;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.MenuItem;
-import android.view.View;
+import android.os.Vibrator;
+import android.util.Log;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.ImageButton;
-import android.widget.ListView;
+import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.List;
+import java.util.StringTokenizer;
 
 import jp.co.akiguchilab.healthcaremanagement.R;
 
-public class TrainingActivity extends Activity implements View.OnClickListener {
+/**
+ * Created by i09324 on 2015/02/27.
+ * 補強運動計測アクティビティ
+ */
+public class TrainingActivity extends Activity implements SensorEventListener {
+    private SensorManager manager;
+    private Vibrator vibrator;
 
-        private int flag = 0;
-        private ListView mListView;
+    private String filepath = "";
+    private float threshold_x_min = 0;
+    private float threshold_x_max = 0;
+    private float threshold_y_min = 0;
+    private float threshold_y_max = 0;
+    private float threshold_z_min = 0;
+    private float threshold_z_max = 0;
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+    private boolean x_flag = false;
+    private boolean y_flag = false;
+    private boolean z_flag = false;
+    private boolean x_counted = false;
+    private boolean y_counted = false;
+    private boolean z_counted = false;
 
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.activity_training);
+    private TextView countView;
+    private int count;
+    private boolean onPractice = false;
 
-            ImageButton clover = (ImageButton) findViewById(R.id.clover);
-            ImageButton apple = (ImageButton) findViewById(R.id.apple);
-            ImageButton dog = (ImageButton) findViewById(R.id.dog);
-            ImageButton bard = (ImageButton) findViewById(R.id.bard);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-            clover.setOnClickListener(this);
-            apple.setOnClickListener(this);
-            dog.setOnClickListener(this);
-            bard.setOnClickListener(this);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_training);
 
-            Integer[] imgList = {R.drawable.nawatobi, R.drawable.danberu};
-            String[] msgList = {"なわとび", "ダンベル"};
+        manager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
-            ArrayList<ListViewData> objects = new ArrayList<ListViewData>();
+        TextView titleView = (TextView) findViewById(R.id.training_title);
+        countView = (TextView) findViewById(R.id.training_counter);
 
-            for(int i = 0; i < 2; i++) {
-                ListViewData data = new ListViewData();
-                data.setString(msgList[i]);
-                data.setBitmap(BitmapFactory.decodeResource(getResources(), imgList[i]));
-                objects.add(data);
-            }
+        // 運動名の取得
+        titleView.setText(getIntent().getExtras().getString("title", "エラー"));
 
-            ListViewItemAdapter adapter = new ListViewItemAdapter(this, objects);
+        // 運動の閾値ファイルのパスを取得
+        filepath = getIntent().getExtras().getString("path", "");
 
-            mListView = (ListView) findViewById(R.id.listView);
-            mListView.setAdapter(adapter);
+        // 練習モードか？
+        onPractice = getIntent().getExtras().getBoolean("onPractice");
 
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    // item を選択したときの遷移実装
+        // ファイルから閾値を読み込み
+        readThreshold(filepath);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        countTraining();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //manager.unregisterListener(this);
+    }
+
+    public void readThreshold(String path) {
+        // ファイルから読み込む
+        // 軸名,MAX,MIN
+        try {
+            File file = new File(path);
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            int count = 0;
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                StringTokenizer st = new StringTokenizer(line, ",");
+                st.nextToken();
+
+                if (count == 0) {
+                    threshold_x_max = Float.parseFloat(st.nextToken());
+                    threshold_x_min = Float.parseFloat(st.nextToken());
+                } else if (count == 1) {
+                    threshold_y_max = Float.parseFloat(st.nextToken());
+                    threshold_y_min = Float.parseFloat(st.nextToken());
+                } else if (count == 2) {
+                    threshold_z_max = Float.parseFloat(st.nextToken());
+                    threshold_z_min = Float.parseFloat(st.nextToken());
                 }
-            });
-        }
-
-        @Override
-        public void onClick(View v) {
-            if(v.getId() == R.id.clover)                    flag = 1;
-            else if(v.getId() == R.id.apple && flag == 1)   flag = 2;
-            else if(v.getId() == R.id.dog && flag == 2)     flag = 3;
-            else if(v.getId() == R.id.bard && flag == 3) {
-                flag = 0;
-                // Toast.makeText(this, "seek", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(this, TrainingSetting.class);
-                startActivity(intent);
-                //補強運動設定画面に遷移
-            } else                                          flag = 0;
-        }
-
-        @Override
-        protected void onResume() {
-            super.onResume();
-            registerForContextMenu(mListView);
-        }
-
-        @Override
-        protected void onPause() {
-            super.onPause();
-            unregisterForContextMenu(mListView);
-        }
-
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
-            super.onCreateContextMenu(menu, view, menuInfo);
-            getMenuInflater().inflate(R.menu.context_menu_main, menu);
-        }
-
-        @Override
-        public boolean onContextItemSelected(MenuItem item) {
-
-            if (item.getItemId() != R.id.DeleteListItem) {
-                return false;
+                count++;
             }
 
-            // MenuItemからContextMenuInfoを取得し、AdapterContextMenuInfoにキャストします
-            ContextMenuInfo menuInfo = item.getMenuInfo();
-            AdapterContextMenuInfo adapterInfo = (AdapterContextMenuInfo) menuInfo;
-
-            // AdapterContextMenuInfoから長押ししたリストアイテムのpositionを取得します
-            int position = adapterInfo.position;
-
-            // ListViewから長押しされたリストアイテムを取得します
-            ListViewData data = (ListViewData) mListView.getItemAtPosition(position);
-            // ListViewからセットされているAdapterを取得します
-            ListViewItemAdapter adapter = (ListViewItemAdapter) mListView.getAdapter();
-
-            if (item.getItemId() == R.id.DeleteListItem) {
-                adapter.remove(data);
-            }
-            adapter.notifyDataSetChanged();
-
-            return true;
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
+    private void countTraining() {
+        List<Sensor> sensors = manager.getSensorList(Sensor.TYPE_ACCELEROMETER);
+        if (sensors.size() > 0) {
+            Sensor sensor = sensors.get(0);
+            manager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
+        }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            if (!x_counted) {
+                if (!x_flag && threshold_x_min > event.values[0]) {
+                    x_flag = true;
+                }
+                if (x_flag && threshold_x_max < event.values[0]) {
+                    x_counted = true;
+                }
+            }
+            if (!y_counted) {
+                if (!y_flag && threshold_y_min > event.values[1]) {
+                    y_flag = true;
+                }
+                if (y_flag && threshold_y_max < event.values[1]) {
+                    y_counted = true;
+                }
+            }
+            if (!z_counted) {
+                if (!z_flag && threshold_z_min > event.values[2]) {
+                    z_flag = true;
+                }
+                if (z_flag && threshold_z_max < event.values[2]) {
+                    z_counted = true;
+                }
+            }
+
+            if (x_counted && y_counted && z_counted) {
+                // 10ミリ秒バイブレーション
+                vibrator.vibrate(10);
+
+                // 1回カウント
+                count++;
+                countView.setText(count + "");
+
+                Log.d("ResetCounted", "Counted Clear!");
+                // フラグのリセット
+                x_flag = false;
+                y_flag = false;
+                z_flag = false;
+                x_counted = false;
+                y_counted = false;
+                z_counted = false;
+            }
+
+            // TODO: 練習モード時は計測を保存しない
+            if (!onPractice) {
+                // TODO: 計測回数の保存処理
+
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+}
